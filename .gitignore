@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+.playwright/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project Specific
+tests/screenshots/*.png
+# tests/generated/*.spec.ts (Commented out to allow execution)
+# !tests/generated/broken_example.spec.ts
+!tests/generated/.gitkeep
+
+# Gradio
+flagged/
+gradio_queue.db
