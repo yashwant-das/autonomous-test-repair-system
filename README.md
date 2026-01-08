@@ -17,25 +17,36 @@ A modular, LLM-powered QA automation agent that generates and maintains Playwrig
 .
 ├── src/
 │   ├── agents/          # Agent logic (Generator, Vision, Healer)
-│   ├── utils/           # Shared utilities (LLM client, Browser, Validation)
+│   │   ├── generator.py # Test generation agent
+│   │   ├── healer.py    # Self-healing agent
+│   │   └── vision.py    # Vision-based test generation
+│   ├── utils/           # Shared utilities
+│   │   ├── browser.py   # Browser automation (Playwright)
+│   │   ├── llm.py       # LLM client configuration
+│   │   └── validation.py # Input validation utilities
 │   └── app.py           # Unified Gradio UI
 ├── tests/
 │   ├── generated/       # Storage for generated .spec.ts files
 │   └── screenshots/     # Storage for Vision Agent debug screenshots
+├── test-results/        # Playwright test execution results
+├── playwright-report/   # Playwright HTML test reports
+├── Dockerfile           # Docker container configuration
 ├── requirements.txt     # Python dependencies
 ├── package.json         # Node.js dependencies (Playwright)
+├── package-lock.json    # Node.js dependency lock file
 ├── playwright.config.ts # Playwright configuration
 ├── tsconfig.json        # TypeScript configuration
+├── .env                 # Environment variables (create from ENV_VARIABLES.md)
 ├── ENV_VARIABLES.md     # Environment variables documentation
 ├── DOCKER.md            # Docker workflow guide
-└── README.md
+└── README.md            # This file
 ```
 
 ## Setup
 
 ### Option 1: Docker (Recommended)
 
-The easiest way to run the application is using Docker:
+The easiest way to run the application is using Docker. The project includes a `Dockerfile` that sets up the complete environment.
 
 ```bash
 # Build the Docker image
@@ -50,7 +61,14 @@ docker run -p 7860:7860 \
 
 Access the Gradio interface at `http://localhost:7860`.
 
-For detailed Docker instructions, including debugging workflows and container management, see [DOCKER.md](DOCKER.md).
+**For detailed Docker instructions**, including:
+- Building and running containers
+- Volume mounts for development
+- Manual debugging and healing workflows
+- Container management commands
+- Troubleshooting tips
+
+See [DOCKER.md](DOCKER.md) for complete documentation.
 
 ### Option 2: Local Installation
 
@@ -137,14 +155,16 @@ python -m src.agents.healer tests/generated/broken_example.spec.ts
 
 ## Configuration
 
-You can customize the LLM settings by using environment variables. Create a `.env` file in the project root or set the following variables:
+### Environment Variables
+
+You can customize the LLM settings by using environment variables. Create a `.env` file in the project root (see [ENV_VARIABLES.md](ENV_VARIABLES.md) for template):
 
 - `LM_STUDIO_URL`: Defaults to `http://localhost:1234/v1`
 - `LM_STUDIO_API_KEY`: Defaults to `lm-studio`
 - `DEFAULT_MODEL`: Defaults to `local-model`
 - `VISION_MODEL`: Defaults to `local-model`
 
-For detailed information about all environment variables, see [ENV_VARIABLES.md](ENV_VARIABLES.md).
+**For complete environment variable documentation**, including descriptions, defaults, and usage examples, see [ENV_VARIABLES.md](ENV_VARIABLES.md).
 
 ## Technical Details
 
@@ -152,8 +172,26 @@ For detailed information about all environment variables, see [ENV_VARIABLES.md]
 - **Playwright**: Configured via `playwright.config.ts` with retry logic, HTML reporting, and screenshot/video capture on failure
 - **TypeScript**: Configured via `tsconfig.json` with strict type checking
 - Tests are automatically organized with timestamp-based naming
+- Test results are stored in `test-results/` directory
+- HTML reports are generated in `playwright-report/` directory
+
+### Docker Configuration
+- **Base Image**: Uses official Playwright Python image (`mcr.microsoft.com/playwright/python`)
+- **Node.js**: Installed separately (v20.x) as it's not included in the base image
+- **Port**: Exposes port 7860 for Gradio interface
+- **Environment**: Configured to listen on all interfaces (`0.0.0.0`) for container access
+
+For detailed Docker workflows, see [DOCKER.md](DOCKER.md).
 
 ### Security
 - Input validation prevents malicious URLs and path traversal attacks
 - File operations are restricted to allowed directories
 - Subprocess calls use proper sanitization
+
+## Documentation
+
+This project includes comprehensive documentation:
+
+- **[README.md](README.md)** (this file): Overview, setup, and usage
+- **[DOCKER.md](DOCKER.md)**: Complete Docker workflow guide
+- **[ENV_VARIABLES.md](ENV_VARIABLES.md)**: Environment variable reference
