@@ -29,7 +29,7 @@ h1 {
 """
 
 # Use default theme for standard Gradio appearance
-with gr.Blocks(title="LM Studio QA Agent", theme=gr.themes.Default()) as demo:
+with gr.Blocks(title="LM Studio QA Agent") as demo:
     gr.Markdown("# LM Studio QA Agent")
     gr.Markdown("Generate, test, and maintain Playwright test automation scripts.")
 
@@ -187,12 +187,15 @@ with gr.Blocks(title="LM Studio QA Agent", theme=gr.themes.Default()) as demo:
                 try:
                     import shutil
                     from src.utils.validation import validate_file_path
+                    # In Gradio 6.x, file_count="single" returns a string path directly
+                    # Handle both string paths and file objects for compatibility
+                    file_path = file_obj if isinstance(file_obj, str) else file_obj.name
                     # Ensure the file is in the project directory so Playwright can find the context
                     local_path = os.path.join(
-                        "tests", "generated", os.path.basename(file_obj.name))
+                        "tests", "generated", os.path.basename(file_path))
                     # Validate the path before copying
                     validated_path = validate_file_path(local_path)
-                    shutil.copy(file_obj.name, validated_path)
+                    shutil.copy(file_path, validated_path)
                     return attempt_healing(validated_path)
                 except ValidationError as e:
                     return f"Validation Error: {str(e)}"
@@ -204,4 +207,4 @@ with gr.Blocks(title="LM Studio QA Agent", theme=gr.themes.Default()) as demo:
                 h_file_in], outputs=h_result_out)
 
 if __name__ == "__main__":
-    demo.launch(css=css)
+    demo.launch(theme=gr.themes.Default(), css=css)
