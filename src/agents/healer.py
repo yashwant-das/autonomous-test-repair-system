@@ -178,7 +178,7 @@ def attempt_healing(test_file, max_retries=1):
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python src/agents/healer.py <path_to_test_file>")
+        print("Usage: python -m src.agents.healer <path_to_test_file>")
         sys.exit(1)
 
     test_file = sys.argv[1]

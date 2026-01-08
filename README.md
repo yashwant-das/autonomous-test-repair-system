@@ -27,10 +27,32 @@ A modular, LLM-powered QA automation agent that generates and maintains Playwrig
 ├── playwright.config.ts # Playwright configuration
 ├── tsconfig.json        # TypeScript configuration
 ├── ENV_VARIABLES.md     # Environment variables documentation
+├── DOCKER.md            # Docker workflow guide
 └── README.md
 ```
 
 ## Setup
+
+### Option 1: Docker (Recommended)
+
+The easiest way to run the application is using Docker:
+
+```bash
+# Build the Docker image
+docker build -t qa-agent .
+
+# Run the container
+docker run -p 7860:7860 \
+  --add-host=host.docker.internal:host-gateway \
+  -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
+  qa-agent
+```
+
+Access the Gradio interface at `http://localhost:7860`.
+
+For detailed Docker instructions, including debugging workflows and container management, see [DOCKER.md](DOCKER.md).
+
+### Option 2: Local Installation
 
 1. **Install Python Dependencies**:
    > **Recommendation**: Use **Python 3.12** or **3.11**. These versions have pre-compiled wheels for all dependencies,
@@ -68,14 +90,14 @@ Generated tests follow a professional, organized naming scheme:
 `[domain]_[description]_[timestamp].spec.ts`
 
 **Example**:
-`saucedemo_login_with_standard_user_20240107_230500.spec.ts`
+`saucedemo_login_with_standard_user_20250108_143000.spec.ts`
 
 ### Running Agents Individually
 
 You can also run specific agents directly from the command line:
 
 ```bash
-python src/agents/healer.py tests/generated/broken_example.spec.ts
+python -m src.agents.healer tests/generated/broken_example.spec.ts
 ```
 
 ## Example Scenarios
@@ -108,7 +130,7 @@ python src/agents/healer.py tests/generated/broken_example.spec.ts
 ### 5. Self-Healer
 
 - **Input**: A broken test file like [broken_example.spec.ts](tests/generated/broken_example.spec.ts)
-- **Command**: `python src/agents/healer.py tests/generated/broken_example.spec.ts`
+- **Command**: `python -m src.agents.healer tests/generated/broken_example.spec.ts`
 - **Goal**: Automatically repairs incorrect selectors and labels by analyzing Playwright error logs.
 - **Trial**: To see it in action, purposefully introduce mistakes into the locator IDs or button names in the script and
   watch the agent heal them!

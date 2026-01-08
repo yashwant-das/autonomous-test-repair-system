@@ -1,12 +1,19 @@
 {
   "name": "lmstudio-qa-agent",
   "version": "1.0.0",
-  "description": "",
+  "description": "A modular, LLM-powered QA automation agent that generates and maintains Playwright tests",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx playwright test"
   },
-  "keywords": [],
+  "keywords": [
+    "playwright",
+    "qa",
+    "automation",
+    "testing",
+    "llm",
+    "ai"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",

@@ -1,0 +1,49 @@
+# Python
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Node.js
+node_modules/
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Config and logs
+.env
+.env.local
+*.log
+test-results/
+playwright-report/
+*.pid
+*.seed
+*.pid.lock
+
+# Generated files
+tests/generated/*
+!tests/generated/.gitkeep
+tests/screenshots/*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Documentation
+*.md
+!README.md
+
+# Docker
+Dockerfile*
+.dockerignore
+docker-compose*.yml
