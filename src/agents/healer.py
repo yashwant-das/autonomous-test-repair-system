@@ -1,3 +1,9 @@
+"""
+Self-healing agent for automatically repairing broken Playwright tests.
+
+This module analyzes test failures and uses LLM-based code generation to fix
+broken selectors and test logic.
+"""
 import os
 import subprocess
 import sys
@@ -11,14 +17,13 @@ sys.path.append(os.path.abspath(os.path.join(
 
 
 def run_test(test_file):
-    """
-    Run a Playwright test file.
+    """Run a Playwright test file and return execution result.
 
     Args:
         test_file: Path to the test file
 
     Returns:
-        subprocess.CompletedProcess result
+        subprocess.CompletedProcess: Test execution result with returncode, stdout, stderr
     """
     print(f"Running {test_file}...")
     try:
@@ -49,8 +54,7 @@ def run_test(test_file):
 
 
 def heal_code(file_path, error_log, current_code):
-    """
-    Use LLM to heal broken test code.
+    """Use LLM to heal broken test code based on error logs.
 
     Args:
         file_path: Path to the test file
@@ -58,7 +62,7 @@ def heal_code(file_path, error_log, current_code):
         current_code: Current (broken) test code
 
     Returns:
-        Fixed code string, or original code if healing fails
+        str: Fixed code string, or original code if healing fails
     """
     if not current_code or not current_code.strip():
         return current_code
@@ -112,15 +116,14 @@ def heal_code(file_path, error_log, current_code):
 
 
 def attempt_healing(test_file, max_retries=1):
-    """
-    Attempt to heal a broken test file.
+    """Attempt to heal a broken test file by analyzing errors and fixing code.
 
     Args:
         test_file: Path to the test file to heal
         max_retries: Maximum number of healing attempts (default: 1)
 
     Returns:
-        Result message string
+        str: Result message indicating success or failure
     """
     try:
         # Validate file path

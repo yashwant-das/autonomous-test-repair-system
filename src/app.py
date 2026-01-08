@@ -1,3 +1,11 @@
+"""
+Gradio web interface for the LM Studio QA Agent.
+
+Provides three main tabs:
+- Test Generator: Generate Playwright tests from URL and description
+- Vision Agent: Generate tests using vision-capable LLMs
+- Self-Healer: Automatically repair broken test files
+"""
 import os
 import sys
 
@@ -69,6 +77,7 @@ with gr.Blocks(title="LM Studio QA Agent") as demo:
 
 
             def safe_generate_test(url, story):
+                """Generate test script with input validation and error handling."""
                 try:
                     validated_url = validate_and_sanitize_url(url)
                     validated_story = validate_description(story)
@@ -80,6 +89,7 @@ with gr.Blocks(title="LM Studio QA Agent") as demo:
 
 
             def safe_run_test(url, code, story):
+                """Run generated test with input validation and error handling."""
                 try:
                     validated_url = validate_and_sanitize_url(url)
                     validated_story = validate_description(
@@ -132,6 +142,7 @@ with gr.Blocks(title="LM Studio QA Agent") as demo:
 
 
             def safe_analyze_visual(url, instruction):
+                """Analyze UI visually with input validation and error handling."""
                 try:
                     validated_url = validate_and_sanitize_url(url)
                     validated_instruction = validate_description(instruction)
@@ -143,6 +154,7 @@ with gr.Blocks(title="LM Studio QA Agent") as demo:
 
 
             def safe_run_vision_test(url, code, instruction):
+                """Run vision-generated test with input validation and error handling."""
                 try:
                     validated_url = validate_and_sanitize_url(url)
                     validated_instruction = validate_description(
@@ -180,8 +192,8 @@ with gr.Blocks(title="LM Studio QA Agent") as demo:
                     )
 
 
-            # Simple wrapper to handle file path from Gradio
             def wrap_healer(file_obj):
+                """Handle file upload from Gradio and attempt to heal the test file."""
                 if file_obj is None:
                     return "Please upload a test file."
                 try:

@@ -1,28 +1,43 @@
+"""
+Browser automation utilities for page context extraction.
+
+This module provides functions for fetching and processing web page content
+using Playwright and BeautifulSoup.
+"""
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
 
 def extract_domain(url):
-    """Extracts a clean domain name from a URL."""
+    """Extract a clean domain name from a URL for use in filenames.
+
+    Args:
+        url: URL string
+
+    Returns:
+        str: Clean domain name (e.g., "example" from "https://www.example.com")
+    """
     from urllib.parse import urlparse
     try:
         netloc = urlparse(url).netloc
         domain = netloc.replace("www.", "").split(".")[0]
         return domain if domain else "test"
-    except:
+    except Exception:
         return "test"
 
 
 def fetch_page_context(url, max_chars=30000):
-    """
-    Scrapes a page and returns a cleaned prettified HTML body.
-    
+    """Fetch and clean HTML content from a web page.
+
+    Uses Playwright to load the page and BeautifulSoup to remove unnecessary
+    elements (scripts, styles, SVGs) to reduce token usage for LLM processing.
+
     Args:
         url: Validated URL string
         max_chars: Maximum characters to return (default: 30000)
-        
+
     Returns:
-        Cleaned HTML body as string, or error message
+        str: Cleaned HTML body as string, or error message if fetch fails
     """
     print(f"Visiting {url}...")
     try:

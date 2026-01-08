@@ -1,3 +1,9 @@
+"""
+Vision-based test generation agent using screenshot analysis.
+
+This module captures UI screenshots and uses vision-capable LLMs to generate
+Playwright test scripts based on visual analysis.
+"""
 import base64
 import os
 import sys
@@ -18,14 +24,13 @@ os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 
 def encode_image(image_path):
-    """
-    Encode an image file to base64.
+    """Encode an image file to base64 for LLM vision API.
 
     Args:
         image_path: Path to the image file
 
     Returns:
-        Base64 encoded string
+        str: Base64 encoded string
 
     Raises:
         FileNotFoundError: If image file doesn't exist
@@ -42,15 +47,17 @@ def encode_image(image_path):
 
 
 def analyze_visual_ui(url, instruction):
-    """
-    Analyze a UI using vision-capable LLM and generate a test script.
+    """Analyze a UI using vision-capable LLM and generate a test script.
+
+    Captures a screenshot of the target URL and uses vision LLM to analyze
+    the UI and generate appropriate Playwright test code.
 
     Args:
         url: Validated URL string
-        instruction: Validated instruction string
+        instruction: Validated instruction string describing the action to perform
 
     Returns:
-        Generated TypeScript test code as string, or error message
+        str: Generated TypeScript test code, or error message if generation fails
     """
     import re
 

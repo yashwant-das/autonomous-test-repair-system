@@ -12,14 +12,13 @@ class ValidationError(Exception):
 
 
 def validate_url(url: str) -> bool:
-    """
-    Validate that a URL is properly formatted and uses http/https.
-    
+    """Validate that a URL is properly formatted and uses http/https.
+
     Args:
         url: The URL string to validate
-        
+
     Returns:
-        True if valid, False otherwise
+        bool: True if valid, False otherwise
     """
     if not url or not isinstance(url, str):
         return False
@@ -36,15 +35,14 @@ def validate_url(url: str) -> bool:
 
 
 def validate_and_sanitize_url(url: str) -> str:
-    """
-    Validate and sanitize a URL.
-    
+    """Validate and sanitize a URL.
+
     Args:
         url: The URL string to validate and sanitize
-        
+
     Returns:
-        Sanitized URL string
-        
+        str: Sanitized URL string
+
     Raises:
         ValidationError: If URL is invalid
     """
@@ -60,16 +58,15 @@ def validate_and_sanitize_url(url: str) -> str:
 
 
 def validate_file_path(file_path: str, allowed_dirs: list = None) -> str:
-    """
-    Validate and sanitize a file path to prevent directory traversal.
-    
+    """Validate and sanitize a file path to prevent directory traversal.
+
     Args:
         file_path: The file path to validate
         allowed_dirs: List of allowed directory prefixes (default: tests/generated)
-        
+
     Returns:
-        Normalized absolute path
-        
+        str: Normalized absolute path
+
     Raises:
         ValidationError: If path is invalid or outside allowed directories
     """
@@ -103,16 +100,15 @@ def validate_file_path(file_path: str, allowed_dirs: list = None) -> str:
 
 
 def validate_description(description: str, max_length: int = 500) -> str:
-    """
-    Validate and sanitize a test description/scenario.
-    
+    """Validate and sanitize a test description/scenario.
+
     Args:
         description: The description string to validate
         max_length: Maximum allowed length (default: 500)
-        
+
     Returns:
-        Sanitized description string
-        
+        str: Sanitized description string
+
     Raises:
         ValidationError: If description is invalid
     """

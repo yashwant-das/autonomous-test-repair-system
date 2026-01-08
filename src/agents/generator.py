@@ -1,3 +1,9 @@
+"""
+Test generation agent for creating Playwright test scripts.
+
+This module generates TypeScript Playwright tests from URLs and feature descriptions
+using LLM-based code generation.
+"""
 import os
 import shlex
 import subprocess
@@ -15,15 +21,14 @@ os.makedirs(TEST_DIR, exist_ok=True)
 
 
 def generate_test_script(url, feature_description):
-    """
-    Generate a Playwright test script from a URL and feature description.
+    """Generate a Playwright test script from a URL and feature description.
 
     Args:
         url: Validated URL string
         feature_description: Validated feature description string
 
     Returns:
-        Generated TypeScript test code as string, or error message
+        str: Generated TypeScript test code, or error message if generation fails
     """
     try:
         html_context = fetch_page_context(url)
@@ -75,16 +80,15 @@ def generate_test_script(url, feature_description):
 
 
 def run_generated_test(url, code_snippet, description="test"):
-    """
-    Run a generated test script.
+    """Run a generated test script using Playwright.
 
     Args:
         url: Validated URL string
         code_snippet: TypeScript test code to run
-        description: Test description for filename
+        description: Test description for filename generation
 
     Returns:
-        Test execution result as string
+        str: Test execution result message (pass/fail with logs)
     """
     if not code_snippet or not code_snippet.strip():
         return "Error: No test code provided"
