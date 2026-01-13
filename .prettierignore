@@ -1,0 +1,7 @@
+node_modules
+dist
+build
+.venv
+tests/artifacts
+test-results
+*.spec.ts
