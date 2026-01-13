@@ -3,8 +3,7 @@
 > **An Intelligent, Self-Healing, and Explainable Automated QA System**
 
 [![Status](https://img.shields.io/badge/Status-Beta-orange)](https://github.com/yashwant-das/lmstudio-qa-agent)
-[![Python](https://img.shields.io/badge/Python-3.14-blue)](https://github.com/yashwant-das/lmstudio-qa-agent)
-[![Python](https://img.shields.io/badge/Python-3.14-blue)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Latest-green)](https://playwright.dev/)
 
 ## 🚨 The Problem: "Flaky Tests exist because Debugging is Hard"
@@ -15,42 +14,28 @@ Modern QA automation is broken. When a test fails, engineers spend hours digging
 2. **What changed?** (Locator drift? CSS update?)
 3. **How do I fix it?**
 
-Most "AI" solutions are black boxes that randomly try things until green. **We believe in Explainability.**
+Most "AI" solutions are black boxes. **We believe in Explainability.**
 
 ## 💡 The Solution: Intelligent Healing
 
 The **LM Studio QA Agent** doesn't just "fix" tests—it behaves like a Senior QA Engineer:
 
-1. **Investigates**: Runs tests and captures high-fidelity evidence (logs, DOM snippets).
-2. **Diagnoses**: Uses **Deterministic Heuristics** (Regex) for instant confidence 1.0 matches (`TIMEOUT`, `ASSERTION_FAIL`).
-3. **Reasoning**: Consults an LLM (guided by the heuristics) to plan a fix.
-4. **Explains**: Outputs a structured **Execution Timeline** and **Decision JSON** proving _why_ it made the change.
+1. **Investigates**: Runs tests and captures high-fidelity evidence (logs, DOM snippets, screenshots).
+2. **Diagnoses**: Uses **Enhanced Heuristics** for instant detection of timeouts, network errors (404/500), and JS crashes.
+3. **Reasoning**: Consults an LLM (guided by heuristics and externalized prompts) to plan a fix.
+4. **Explains**: Outputs structured **Execution Timelines** and **Decision JSON** proving _why_ it made the change.
 
 ---
 
-## ✨ Key Features
+## ✨ Features
 
-### 🧠 Failure Intelligence Layer
-
-Unlike naive agents, we don't guess.
-
-- **Enhanced Heuristics**: Deterministically identifies network errors (404/500), JavaScript runtime errors, and locator drift.
-- **Improved Evidence**: Automatically finds and links Playwright screenshots from `test-results` to the healing decision.
+- **Test Generation**: Scrapes web pages and generates runnable Playwright TypeScript tests.
+- **Vision Agent**: Uses vision-capable LLMs (e.g., Qwen-VL) to understand UI from screenshots.
+- **Self-Healing**: Automatically fixes broken tests by analyzing error logs and updating selectors.
+- **Enhanced Heuristics**: Deterministically identifies network errors, JavaScript runtime errors, and locator drift.
 - **Customizable Prompts**: All LLM system instructions are externalized in the `prompts/` directory for easy tweaking.
-
-### 🔍 Explainable Artifacts
-
-Every healing attempt generates:
-
-- `healing_decision_*.json`: The brain dump (Diagnosis, Hypothesis, Fix).
-- `execution_timeline_*.json`: Step-by-step audit trail.
-
-### 🖥️ Self-Healing Dashboard
-
-A minimal, powerful UI to visualize the agent's brain:
-
-- **Timeline View**: Watch the agent think in real-time steps.
-- **Decision Inspector**: View the raw JSON data behind the fix.
+- **Input Validation**: Comprehensive validation for URLs, file paths, and user inputs.
+- **Standard UI**: Clean, minimal Gradio interface following standard design patterns.
 
 ---
 
@@ -60,90 +45,138 @@ The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis:
 
 - **1.0 (Certain)**: The failure matched a **Deterministic Heuristic** (Regex). No guessing involved.
 - **0.8 - 0.9 (Strong)**: The LLM identified the issue with high certainty based on logs and code context.
-- **< 0.7 (Low)**: The failure is ambiguous; the agent is proposing a "best-guess" fix that requires closer human review.
+- **< 0.7 (Low)**: The failure is ambiguous; the agent is proposing a "best-guess" fix that requires human review.
 
 ---
 
-## 🚀 Quick Start
+## 🏗️ Project Structure
 
-### Prerequisites
-
-- Python 3.10+
-- Node.js & Playwright
-- Local LLM (LM Studio) or OpenAI API Key
-
-### Installation
-
-```bash
-git clone https://github.com/yourusername/lmstudio-qa-agent.git
-cd lmstudio-qa-agent
-npm install           # Installs Playwright & Quality Control tools
-pip install -r requirements.txt
-playwright install
+```text
+.
+├── src/
+│   ├── agents/          # Agent logic (Generator, Vision, Healer)
+│   │   ├── generator.py # Test generation agent
+│   │   ├── healer.py    # Self-healing agent
+│   │   └── vision.py    # Vision-based test generation
+│   ├── utils/           # Shared utilities
+│   │   ├── browser.py   # Browser automation (Playwright)
+│   │   ├── llm.py       # LLM client configuration
+│   │   ├── prompt_loader.py # Externalized prompt management
+│   │   └── validation.py # Input validation utilities
+│   └── app.py           # Unified Gradio UI
+├── prompts/             # Externalized LLM system instructions (.md)
+├── tests/
+│   ├── generated/       # Storage for generated .spec.ts files
+│   ├── artifacts/       # Healing decisions and execution timelines
+│   └── screenshots/     # Storage for Vision Agent debug screenshots
+├── test-results/        # Playwright test execution results
+├── playwright-report/   # Playwright HTML test reports
+├── Dockerfile           # Docker container configuration
+├── requirements.txt     # Python dependencies
+├── package.json         # Node.js dependencies (Playwright)
+├── playwright.config.ts # Playwright configuration
+└── README.md            # This file
 ```
 
-### Run the Demo
+---
 
-1. **Setup a Broken Test**:
+## 🚀 Setup
+
+### Option 1: Docker (Recommended)
+
+The easiest way to run the application is using Docker.
+
+```bash
+# Build the Docker image
+docker build -t qa-agent .
+
+# Run the container
+docker run -p 7860:7860 \
+  --add-host=host.docker.internal:host-gateway \
+  -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
+  qa-agent
+```
+
+Access the Gradio interface at `http://localhost:7860`. See [DOCKER.md](DOCKER.md) for more info.
+
+### Option 2: Local Installation
+
+1. **Install Python Dependencies** (Python 3.11+ recommended):
 
    ```bash
-   python scripts/setup_demo.py
+   pip install -r requirements.txt
    ```
 
-   _(Creates `tests/generated/demo_broken.spec.ts` with an intentional bug)_
-
-2. **Launch the UI**:
+2. **Install Node.js Dependencies**:
 
    ```bash
-   python src/app.py
+   npm install
+   npx playwright install
    ```
 
-3. **Heal It**:
-   - Go to **Self-Healer** tab.
-   - Upload `tests/generated/demo_broken.spec.ts`.
-   - Click **Heal Test**.
-   - Watch the **Timeline** and **Decision** populate!
+3. **Configure LM Studio**:
+   Ensure LM Studio is running and models (e.g., Qwen-Coder, Qwen-VL) are loaded at `http://localhost:1234/v1`.
+
+---
+
+## 🛠️ Usage
+
+### Launch the UI
+
+```bash
+python src/app.py
+```
+
+Go to `http://127.0.0.1:7860` to generate, run, and heal tests.
+
+### Running Agents Individually
+
+```bash
+python -m src.agents.healer tests/generated/broken_example.spec.ts
+```
+
+---
+
+## 🧪 Example Scenarios
+
+1. **Form Authentication**: [The Internet Login](https://the-internet.herokuapp.com/login). Proves handling of standard forms.
+2. **Dynamic React Apps**: [TodoMVC](https://demo.playwright.dev/todomvc/). Demonstrates client-side rendered app support.
+3. **Real-world Search**: [Wikipedia AI Search](https://www.wikipedia.org). Validates multi-step verification.
+4. **Vision Agent**: [SauceDemo Vision](https://www.saucedemo.com). Uses screenshots to identify elements.
+5. **Self-Healer**: Automatically repairs incorrect selectors by analyzing logs. Try intentionally breaking a script and watching it heal!
+
+---
+
+## ⚙️ Configuration & Quality Control
+
+### Environment Variables
+
+See [ENV_VARIABLES.md](ENV_VARIABLES.md) for full documentation on `LM_STUDIO_URL`, `DEFAULT_MODEL`, etc.
+
+### Customizable Prompts
+
+Edit the files in `prompts/` to tweak agent behavior without changing code:
+
+- `generator.md`, `healer.md`, `vision.md`.
+
+### Development Commands
+
+```bash
+npm run lint      # Run all quality checks
+npm run test:unit # Run Python unit tests
+npm run format    # Auto-format all code
+```
+
+---
+
+## 🔒 Security
+
+- Input validation prevents malicious URLs and path traversal.
+- File operations restricted to allowed directories.
+- Subprocess calls use proper sanitization.
+
+---
 
 ## 🏗️ Architecture
 
 See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for a deep dive into the **Monitor -> Investigate -> Reason -> Act -> Report** pipeline.
-
-## 🛠️ Customization: Prompts & Behavior
-
-You can customize how the agents behave by editing the Markdown files in the `prompts/` directory:
-
-- `generator.md`: Instructions for the Test Generator agent.
-- `healer.md`: The strategy and JSON schema for the Self-Healer agent.
-- `vision.md`: Instruction set for the Vision-based agent.
-
-No code changes are required to tweak the agents' logic or output format!
-
-## 🛠️ Development & Quality Control
-
-We use a multi-layered linting and testing suite to ensure high-grade code quality.
-
-### Commands
-
-```bash
-# Run all quality checks (JS, Python, Markdown)
-npm run lint
-
-# Run Python unit tests
-npm run test:unit
-
-# Auto-format all code (Prettier + Black)
-npm run format
-```
-
-### Tooling Stack
-
-- **TypeScript/JS**: Prettier + ESLint (v9 Flat Config) + Playwright Plugin
-- **Python**: Black + isort + Flake8
-- **Documentation**: Markdownlint
-- **Automation**: Husky (Git Hooks) + lint-staged
-
-## 🔮 Roadmap
-
-- [ ] **Visual Diff**: Image comparison for UI regression.
-- [ ] **Live Streaming**: Real-time websocket updates for the Timeline.
-- [ ] **Multi-File Context**: Healing across dependent files/Page Objects.
