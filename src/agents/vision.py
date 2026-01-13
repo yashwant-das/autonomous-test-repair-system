@@ -4,6 +4,7 @@ Vision-based test generation agent using screenshot analysis.
 This module captures UI screenshots and uses vision-capable LLMs to generate
 Playwright test scripts based on visual analysis.
 """
+
 import base64
 import os
 import sys
@@ -16,8 +17,7 @@ from src.utils.browser import extract_domain
 from src.utils.llm import get_client, get_model, extract_code_block
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
-sys.path.append(os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "..", "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 SCREENSHOT_DIR = "tests/screenshots"
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
@@ -41,7 +41,7 @@ def encode_image(image_path):
 
     try:
         with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode('utf-8')
+            return base64.b64encode(image_file.read()).decode("utf-8")
     except IOError as e:
         raise IOError(f"Error reading screenshot: {str(e)}")
 
@@ -66,7 +66,7 @@ def analyze_visual_ui(url, instruction):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Meaningful snake_case sanitization
-        clean_inst = re.sub(r'[^a-zA-Z0-9\s]', '', instruction).lower()
+        clean_inst = re.sub(r"[^a-zA-Z0-9\s]", "", instruction).lower()
         snake_inst = "_".join(clean_inst.split())[:30]
 
         screenshot_name = f"{domain}_{snake_inst}_{timestamp}.png"
@@ -79,8 +79,7 @@ def analyze_visual_ui(url, instruction):
         try:
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
-                context = browser.new_context(
-                    viewport={"width": 1280, "height": 720})
+                context = browser.new_context(viewport={"width": 1280, "height": 720})
                 page = context.new_page()
                 page.goto(url, timeout=30000, wait_until="domcontentloaded")
                 time.sleep(2)  # Wait for animations
@@ -98,10 +97,10 @@ def analyze_visual_ui(url, instruction):
             return f"Error encoding image: {str(e)}"
 
         system_instruction = """
-    You are a Test Automation Expert. 
+    You are a Test Automation Expert.
     Analyze the UI screenshot provided.
     Write a complete Playwright test (TypeScript) that performs the user's requested action.
-    
+
     RULES:
     1. Always begin the test by navigating to the TARGET URL provided.
     2. Use 'import { test, expect } from "@playwright/test";'
@@ -122,16 +121,21 @@ def analyze_visual_ui(url, instruction):
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": f"TARGET URL: {url}\nUser Scenario: {instruction}"},
+                            {
+                                "type": "text",
+                                "text": f"TARGET URL: {url}\nUser Scenario: {instruction}",
+                            },
                             {
                                 "type": "image_url",
-                                "image_url": {"url": f"data:image/png;base64,{base64_image}"}
-                            }
-                        ]
-                    }
+                                "image_url": {
+                                    "url": f"data:image/png;base64,{base64_image}"
+                                },
+                            },
+                        ],
+                    },
                 ],
                 temperature=0.1,
-                max_tokens=2000
+                max_tokens=2000,
             )
 
             if not response.choices or not response.choices[0].message.content:

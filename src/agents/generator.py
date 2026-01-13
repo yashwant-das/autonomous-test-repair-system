@@ -4,6 +4,7 @@ Test generation agent for creating Playwright test scripts.
 This module generates TypeScript Playwright tests from URLs and feature descriptions
 using LLM-based code generation.
 """
+
 import os
 import shlex
 import subprocess
@@ -13,8 +14,7 @@ from src.utils.browser import fetch_page_context, extract_domain
 from src.utils.llm import get_client, get_model, extract_code_block
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
-sys.path.append(os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "..", "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 TEST_DIR = "tests/generated"
 os.makedirs(TEST_DIR, exist_ok=True)
@@ -37,9 +37,9 @@ def generate_test_script(url, feature_description):
             return html_context
 
         system_instruction = """
-    You are a Senior QA Automation Engineer. 
+    You are a Senior QA Automation Engineer.
     Write a complete, runnable Playwright (TypeScript) test file.
-    
+
     RULES:
     1. Use 'import { test, expect } from "@playwright/test";'
     2. Analyze the HTML to find 'data-test', 'id', or specific 'class' selectors.
@@ -58,7 +58,7 @@ def generate_test_script(url, feature_description):
                 model=get_model(),
                 messages=[
                     {"role": "system", "content": system_instruction},
-                    {"role": "user", "content": user_prompt}
+                    {"role": "user", "content": user_prompt},
                 ],
                 temperature=0.1,
             )
@@ -102,10 +102,10 @@ def run_generated_test(url, code_snippet, description="test"):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Meaningful snake_case sanitization (limited to alphanumeric and simple hyphens)
-        clean_desc = re.sub(r'[^a-zA-Z0-9]', '_', description).lower()
+        clean_desc = re.sub(r"[^a-zA-Z0-9]", "_", description).lower()
         # Remove consecutive underscores
-        clean_desc = re.sub(r'_+', '_', clean_desc)
-        snake_desc = clean_desc[:40].strip('_')
+        clean_desc = re.sub(r"_+", "_", clean_desc)
+        snake_desc = clean_desc[:40].strip("_")
 
         filename = f"{domain}_{snake_desc}_{timestamp}.spec.ts"
         filepath = os.path.join(TEST_DIR, filename)
@@ -120,7 +120,7 @@ def run_generated_test(url, code_snippet, description="test"):
         print(f"Running {filename}...")
 
         # Sanitize filepath for subprocess
-        safe_filepath = shlex.quote(filepath)
+        shlex.quote(filepath)
 
         try:
             result = subprocess.run(
@@ -128,8 +128,9 @@ def run_generated_test(url, code_snippet, description="test"):
                 capture_output=True,
                 text=True,
                 timeout=45,
-                cwd=os.path.dirname(os.path.dirname(
-                    os.path.dirname(__file__)))  # Project root
+                cwd=os.path.dirname(
+                    os.path.dirname(os.path.dirname(__file__))
+                ),  # Project root
             )
 
             if result.returncode == 0:

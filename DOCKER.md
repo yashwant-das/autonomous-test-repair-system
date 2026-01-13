@@ -87,16 +87,19 @@ The `-d` flag runs the container in detached mode, and `--name` assigns a name f
 Get a command-line interface inside the container:
 
 1. **Find the Container ID or Name:**
+
    ```bash
    docker ps
    ```
 
 2. **Open the Shell:**
+
    ```bash
    docker exec -it qa-agent-container /bin/bash
    ```
-   
+
    Or use the container ID:
+
    ```bash
    docker exec -it <CONTAINER_ID> /bin/bash
    ```
@@ -108,16 +111,19 @@ You are now inside the container (`root@<container-id>:/app#`).
 Execute Playwright tests directly from the command line to verify failures:
 
 **Run All Tests:**
+
 ```bash
 npx playwright test
 ```
 
 **Run a Specific Test:**
+
 ```bash
 npx playwright test tests/generated/broken_example.spec.ts
 ```
 
 **Run with Verbose Output:**
+
 ```bash
 npx playwright test --reporter=list
 ```
@@ -127,12 +133,14 @@ npx playwright test --reporter=list
 Copy the Playwright HTML report from the container to your host machine:
 
 **On your Host Machine (not inside Docker):**
+
 ```bash
 # Syntax: docker cp <ContainerName>:<PathInside> <PathOnHost>
 docker cp qa-agent-container:/app/playwright-report ./playwright-report
 ```
 
 **View the Report:**
+
 ```bash
 open playwright-report/index.html
 ```
@@ -142,6 +150,7 @@ open playwright-report/index.html
 If a test fails, invoke the Healer agent manually to fix the code:
 
 **Inside the Docker Shell:**
+
 ```bash
 python -m src.agents.healer tests/generated/broken_example.spec.ts
 ```
@@ -158,26 +167,31 @@ python -m src.agents.healer tests/generated/broken_example.spec.ts
 ## Container Management
 
 ### Stop the Container
+
 ```bash
 docker stop qa-agent-container
 ```
 
 ### Start a Stopped Container
+
 ```bash
 docker start qa-agent-container
 ```
 
 ### Remove the Container
+
 ```bash
 docker rm qa-agent-container
 ```
 
 ### View Container Logs
+
 ```bash
 docker logs qa-agent-container
 ```
 
 ### Follow Logs in Real-Time
+
 ```bash
 docker logs -f qa-agent-container
 ```
@@ -199,6 +213,7 @@ If you encounter permission errors with mounted volumes, adjust file permissions
 ### Container Won't Start
 
 Check logs for errors:
+
 ```bash
 docker logs qa-agent-container
 ```
@@ -206,6 +221,7 @@ docker logs qa-agent-container
 ### Port Already in Use
 
 If port 7860 is already in use, use a different port:
+
 ```bash
 docker run -p 7861:7860 ...
 ```

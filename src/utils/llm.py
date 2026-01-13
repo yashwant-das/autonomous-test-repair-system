@@ -4,6 +4,7 @@ LLM client utilities for OpenAI-compatible API interactions.
 This module provides functions for initializing the LLM client, selecting models,
 and extracting code blocks from LLM responses.
 """
+
 import os
 import re
 
@@ -63,8 +64,51 @@ def extract_code_block(llm_response):
         return match.group(1).strip()
 
     # Fallback: Clean up prefix text or single line backticks
-    llm_response = llm_response.replace("```typescript", "").replace("```ts", "").replace("```", "").strip()
+    llm_response = (
+        llm_response.replace("```typescript", "")
+        .replace("```ts", "")
+        .replace("```", "")
+        .strip()
+    )
 
-    lines = llm_response.split('\n')
-    clean_lines = [l for l in lines if not l.lower().strip().startswith(("here", "sure", "certainly", "i have"))]
-    return '\n'.join(clean_lines).strip()
+    lines = llm_response.split("\n")
+    clean_lines = [
+        line
+        for line in lines
+        if not line.lower().strip().startswith(("here", "sure", "certainly", "i have"))
+    ]
+    return "\n".join(clean_lines).strip()
+
+
+def extract_json_block(llm_response):
+    """Extract JSON block from LLM response text.
+
+    Args:
+        llm_response: Raw LLM response text
+
+    Returns:
+        str: Extracted JSON string
+    """
+    if not llm_response:
+        return "{}"
+
+    # Check for markdown code block
+    pattern = r"```(?:json)?\n(.*?)```"
+    match = re.search(pattern, llm_response, re.DOTALL)
+    if match:
+        json_str = match.group(1).strip()
+    else:
+        # Fallback: look for first { and last }
+        start = llm_response.find("{")
+        end = llm_response.rfind("}")
+
+        if start != -1 and end != -1:
+            json_str = llm_response[start : end + 1]
+        else:
+            json_str = llm_response
+
+    # Sanitization: Remove invalid control characters (0x00-0x1F) except \n, \r, \t
+    # Also remove 0x7F (DEL)
+    json_str = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]", "", json_str)
+
+    return json_str
