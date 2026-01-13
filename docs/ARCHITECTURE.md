@@ -86,3 +86,15 @@ The Healer Agent operates in a strict, explainable pipeline:
    - **JS/TS**: Linted with ESLint 9 (Playwright plugin) and formatted with Prettier.
    - **Python**: Linted with Flake8 and formatted with Black/isort.
    - **Enforcement**: Husky pre-commit hooks ensure 0-lint-error code is never committed.
+
+## 5. Confidence Score Calculation
+
+The `confidence_score` is calculated through a tiered approach in `src/agents/healer.py`:
+
+| Component | Logic | Typical Score |
+| :--- | :--- | :--- |
+| **Heuristic Layer** | Scans logs for hardcoded Regex patterns (e.g., `TimeoutError`, `404`). | **1.0** |
+| **LLM Reasoning** | Analyzes complex failures by correlating logs with source code context. | **0.75 - 0.95** |
+| **Default/Unknown** | Fallback when no evidence strongly correlates to a known issue. | **0.0 - 0.5** |
+
+Scores are preserved in the `HealingDecision` artifact for auditability.

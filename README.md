@@ -54,6 +54,16 @@ A minimal, powerful UI to visualize the agent's brain:
 
 ---
 
+## 📈 Understanding Confidence Scores
+
+The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis:
+
+- **1.0 (Certain)**: The failure matched a **Deterministic Heuristic** (Regex). No guessing involved.
+- **0.8 - 0.9 (Strong)**: The LLM identified the issue with high certainty based on logs and code context.
+- **< 0.7 (Low)**: The failure is ambiguous; the agent is proposing a "best-guess" fix that requires closer human review.
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
