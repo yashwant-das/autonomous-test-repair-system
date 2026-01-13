@@ -98,3 +98,16 @@ The `confidence_score` is calculated through a tiered approach in `src/agents/he
 | **Default/Unknown** | Fallback when no evidence strongly correlates to a known issue. | **0.0 - 0.5** |
 
 Scores are preserved in the `HealingDecision` artifact for auditability.
+
+---
+
+## 6. Quality Control & DX (Developer Experience)
+
+To ensure this project remains maintainable and professional, we've implemented a robust "Pre-flight" pipeline:
+
+- **Strict Linting**:
+  - **Python**: `flake8` for style, `black` for formatting, and `isort` for import organization.
+  - **TypeScript**: `eslint` (v9 Flat Config) with the Playwright plugin for best practices.
+  - **Documentation**: `markdownlint-cli2` ensures all docs follow GFM standards.
+- **Git Hooks (Husky)**: Every `git commit` triggers a `pre-commit` hook that runs `lint-staged`. This prevents malformed or unformatted code from entering the repository.
+- **Explainability First**: Every agent interaction is logged and output as a structured JSON artifact, ensuring that AI decisions are never a "black box."

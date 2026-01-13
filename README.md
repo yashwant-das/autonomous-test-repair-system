@@ -27,6 +27,17 @@ The **LM Studio QA Agent** doesn't just "fix" tests—it behaves like a Senior Q
 
 ---
 
+## 🌟 The "Wow" Factor
+
+What makes this project stand out for recruiters and developers?
+
+- **Zero-Black-Box Reasoning**: Every fix comes with a `HealingDecision` JSON. You can literally "read the agent's mind."
+- **Hybrid Intelligence**: We don't waste LLM tokens on obvious errors. Our **Deterministic Heuristics** handle the "low-hanging fruit" with 1.0 confidence.
+- **Enterprise-Grade DX**: A complete quality control pipeline (ESLint 9, Flake8, Husky, lint-staged) ensures a professional developer experience from day one.
+- **Vision-Augmented**: When the DOM is too complex, the **Vision Agent** looks at screenshots to understand the UI layout, just like a human would.
+
+---
+
 ## ✨ Features
 
 - **Test Generation**: Scrapes web pages and generates runnable Playwright TypeScript tests.
@@ -65,6 +76,10 @@ The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis:
 │   │   └── validation.py # Input validation utilities
 │   └── app.py           # Unified Gradio UI
 ├── prompts/             # Externalized LLM system instructions (.md)
+├── docs/                # Extended documentation
+│   ├── ARCHITECTURE.md  # Deep dive into the agentic pipeline
+│   ├── DEMO_GUIDE.md    # Scripted guide for a killing demo
+│   └── HEALING_SCENARIOS.md # Story-driven examples of healing logic
 ├── tests/
 │   ├── generated/       # Storage for generated .spec.ts files
 │   ├── artifacts/       # Healing decisions and execution timelines
@@ -143,7 +158,7 @@ python -m src.agents.healer tests/generated/broken_example.spec.ts
 2. **Dynamic React Apps**: [TodoMVC](https://demo.playwright.dev/todomvc/). Demonstrates client-side rendered app support.
 3. **Real-world Search**: [Wikipedia AI Search](https://www.wikipedia.org). Validates multi-step verification.
 4. **Vision Agent**: [SauceDemo Vision](https://www.saucedemo.com). Uses screenshots to identify elements.
-5. **Self-Healer**: Automatically repairs incorrect selectors by analyzing logs. Try intentionally breaking a script and watching it heal!
+5. **Self-Healer**: Automatically repairs incorrect selectors by analyzing logs. See [HEALING_SCENARIOS.md](docs/HEALING_SCENARIOS.md) for a list of common "heals."
 
 ---
 
@@ -166,6 +181,13 @@ npm run lint      # Run all quality checks
 npm run test:unit # Run Python unit tests
 npm run format    # Auto-format all code
 ```
+
+### Tooling Stack
+
+- **TypeScript/JS**: Prettier + ESLint (v9 Flat Config) + Playwright Plugin
+- **Python**: Black + isort + Flake8
+- **Documentation**: Markdownlint
+- **Automation**: Husky (Git Hooks) + lint-staged
 
 ---
 
