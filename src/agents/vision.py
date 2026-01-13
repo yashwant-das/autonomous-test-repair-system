@@ -15,6 +15,7 @@ from playwright.sync_api import sync_playwright
 
 from src.utils.browser import extract_domain
 from src.utils.llm import extract_code_block, get_client, get_model
+from src.utils.prompt_loader import load_prompt
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -76,6 +77,7 @@ def analyze_visual_ui(url, instruction):
         if not os.path.exists(SCREENSHOT_DIR):
             os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
+        # 1. Capture screenshot of the target URL
         try:
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
@@ -91,27 +93,16 @@ def analyze_visual_ui(url, instruction):
         if not os.path.exists(screenshot_path):
             return f"Error: Screenshot was not created at {screenshot_path}"
 
+        # 2. Encode screenshot for vision LLM
         try:
             base64_image = encode_image(screenshot_path)
         except (FileNotFoundError, IOError) as e:
             return f"Error encoding image: {str(e)}"
 
-        system_instruction = """
-    You are a Test Automation Expert.
-    Analyze the UI screenshot provided.
-    Write a complete Playwright test (TypeScript) that performs the user's requested action.
+        # 3. Load vision system instruction from prompts/vision.md
+        system_instruction = load_prompt("vision")
 
-    RULES:
-    1. Always begin the test by navigating to the TARGET URL provided.
-    2. Use 'import { test, expect } from "@playwright/test";'
-    3. SELECTOR STRATEGY:
-       - If text appears INSIDE an input field, it is likely a placeholder. Use `page.getByPlaceholder('...')`.
-       - For buttons, use `page.getByRole('button', { name: '...' })`.
-       - If text is a label next to or above a field, use `page.getByLabel('...')`.
-       - Prefer user-visible text (getByText) for general assertions.
-    4. Focus on robust, user-visible locators.
-    """
-
+        # 4. Call Vision LLM
         client = get_client()
         try:
             response = client.chat.completions.create(
@@ -141,6 +132,7 @@ def analyze_visual_ui(url, instruction):
             if not response.choices or not response.choices[0].message.content:
                 return "Error: Vision LLM returned empty response"
 
+            # 5. Extract code block
             code = extract_code_block(response.choices[0].message.content)
             if not code:
                 return "Error: Could not extract code block from vision LLM response"

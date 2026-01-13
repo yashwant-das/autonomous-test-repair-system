@@ -17,6 +17,7 @@ from src.models.healing_model import (
     HealingDecision,
 )
 from src.utils.llm import extract_json_block, get_client, get_model
+from src.utils.prompt_loader import load_prompt
 from src.utils.validation import validate_file_path
 
 # Resolve project root more robustly
@@ -156,45 +157,24 @@ def classify_failure_heuristic(logs: str) -> tuple[FailureType, float, str]:
 
 
 def analyze_and_plan(test_file, code, evidence: Evidence) -> HealingDecision:
-    """Ask LLM to analyze failure and plan a fix, guided by heuristics."""
+    """Analyze the test failure using heuristics and LLM, then propose a fix.
+
+    Args:
+        test_file: Path to the failing test file
+        code: The source code of the failing test
+        evidence: Evidence collected from the failure run
+
+    Returns:
+        HealingDecision: Structured description of the diagnosis and proposed fix
+    """
 
     # Run Heuristics First
     h_type, h_conf, h_reason = classify_failure_heuristic(evidence.error_log)
 
-    system_prompt = f"""You are an Expert QA Automation Engineer.
-Analyze the broken Playwright test and the error log.
-
-HEURISTIC DIAGNOSIS:
-The system has preliminarily analyzed the logs:
-- Type: {h_type.value}
-- Confidence: {h_conf}
-- Reason: {h_reason}
-
-YOUR GOAL:
-1. Verify this diagnosis (or correct it if you see strong evidence otherwise).
-2. Explain your reasoning step-by-step.
-3. Propose a specific code fix.
-
-OUTPUT FORMAT:
-You MUST return a valid JSON object matching this schema:
-{{
-    "failure_type": "LOCATOR_DRIFT" | "TIMEOUT" | "ASSERTION_FAILED" | "ENVIRONMENT_ISSUE" | "POTENTIAL_APP_DEFECT",
-    "failure_summary": "Short description of failure",
-    "hypothesis": "Why the fix will work",
-    "confidence_score": 0.95,
-    "reasoning_steps": ["step 1", "step 2"],
-    "action_taken": {{
-        "original_code": "EXACT contiguous block of code to be replaced. MUST MATCH FILE EXACTLY including whitespace. Do NOT skip lines between edits.",
-        "fixed_code":  "New contiguous block of code to insert.",
-        "description": "What changed"
-    }}
-}}
-
-IMPORTANT RULES:
-1. 'original_code' must be a SINGLE CONTINUOUS block. Do not concatenante non-adjacent lines.
-2. If multiple separate parts of the file need fixing, include the unchanged lines between them in 'original_code' and 'fixed_code' so the block is continuous.
-3. Retain the same indentation style.
-4. Focus on the PRIMARY cause of failure first."""
+    system_prompt_template = load_prompt("healer")
+    system_prompt = system_prompt_template.format(
+        failure_type=h_type.value, confidence=h_conf, reason=h_reason
+    )
 
     user_prompt = f"""FILE: {test_file}
 
@@ -261,7 +241,19 @@ ERROR LOGS:
 
 
 def apply_fix(file_path, current_code, decision: HealingDecision):
-    """Apply the code change described in the decision with robust matching."""
+    """Apply the proposed code fix to the source file using robust matching.
+
+    Attempts exact matching first, then falls back to normalized line matching
+    to handle potential indentation or whitespace differences in LLM output.
+
+    Args:
+        file_path: Path to the file to modify
+        current_code: Current content of the file
+        decision: The healing decision containing the fix to apply
+
+    Returns:
+        str: The updated code content
+    """
     target = decision.action_taken.original_code
     replacement = decision.action_taken.fixed_code
 
@@ -318,7 +310,12 @@ def apply_fix(file_path, current_code, decision: HealingDecision):
 
 
 def emit_artifacts(decision: HealingDecision, timeline: ExecutionTimeline):
-    """Write the decision and timeline to JSON files."""
+    """Write the healing decision and execution timeline to JSON files.
+
+    Args:
+        decision: The healing decision to save
+        timeline: The execution timeline to save
+    """
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     # 1. Healing Decision

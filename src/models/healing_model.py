@@ -1,3 +1,10 @@
+"""
+Data models and schemas for the self-healing agent.
+
+This module defines the structures for failure evidence, healing decisions,
+and execution timelines used by the healing agent.
+"""
+
 import json
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
@@ -94,6 +101,8 @@ class HealingDecision:
 
 @dataclass
 class TimelineStep:
+    """A single step in the healing execution timeline."""
+
     step: str
     details: str
     timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
@@ -101,10 +110,19 @@ class TimelineStep:
 
 @dataclass
 class ExecutionTimeline:
+    """Collection of steps representing the lifecycle of a healing attempt."""
+
     steps: List[TimelineStep] = field(default_factory=list)
 
     def add_step(self, step: str, details: str):
+        """Add a new step to the timeline.
+
+        Args:
+            step: Name/category of the step
+            details: Human-readable description of what happened
+        """
         self.steps.append(TimelineStep(step=step, details=details))
 
     def to_json(self) -> str:
+        """Serialize the timeline to a JSON string."""
         return json.dumps(asdict(self), default=str, indent=2)

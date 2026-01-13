@@ -32,14 +32,14 @@ The system consists of three primary agents, each with strict boundaries:
 
 - **Input:** URL, Instruction.
 - **Responsibility:** Provides visual understanding when DOM analysis is insufficient.
-- **Method:** Captures screenshots, uses Vision LLM to interpret UI layout and user intent.
+- **Method:** Captures screenshots, uses Vision LLM (guided by `prompts/vision.md`) to interpret UI layout.
 - **Output:** Generates test code based on visual cues.
 
 ### C. Healer Agent (`src/agents/healer.py`)
 
 - **Input:** Path to a failing `.spec.ts` file.
 - **Responsibility:** Diagnoses failure, hypothesizes root cause, gathers evidence, patches the code, and verifies the fix.
-- **Key Feature:** **Hybrid Intelligence**. Uses Regex Heuristics for 100% confidence patterns and LLM for complex reasoning.
+- **Key Feature:** **Hybrid Intelligence**. Uses Regex Heuristics for 100% confidence patterns and LLM (guided by `prompts/healer.md`) for complex reasoning.
 - **Output:**
   1. Patched test file.
   2. `HealingDecision` JSON (Evidence + Reasoning).
@@ -53,10 +53,11 @@ The Healer Agent operates in a strict, explainable pipeline:
 
 1. **Failure Detection (Monitor)**
    - Runs the test via Playwright.
-   - Parses logs for errors (`TimeoutError`, `TargetClosedError`, `AssertionError`).
+   - Parses logs for errors (`TimeoutError`, `TargetClosedError`, `AssertionError`, `404/500`, `ReferenceError`).
+   - **Evidence Gathering**: Automatically scans `test-results/` for the latest screenshot to provide visual context to the LLM.
 
 2. **Deterministic Classification (Heuristics)**
-   - **Regex Layer**: Matches logs against known failure patterns.
+   - **Regex Layer**: Matches logs against known failure patterns (including network and JS errors).
    - **Confidence Score**: Assigns 1.0 (Heuristic match) or <1.0 (LLM hypothesis).
 
 3. **LLM Reasoning (Investigate & Reason)**

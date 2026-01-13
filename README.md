@@ -34,9 +34,9 @@ The **LM Studio QA Agent** doesn't just "fix" tests—it behaves like a Senior Q
 
 Unlike naive agents, we don't guess.
 
-- **Regex Heuristics**: Instantly identifies `TimeoutError`, `TargetClosed`, `expect()` failures.
-- **Hybrid Confidence**: High confidence for known patterns, lower confidence for LLM hypotheses.
-- **Sanitization**: Robustly handles imperfect LLM code output (fuzzy matching, whitespace normalization).
+- **Enhanced Heuristics**: Deterministically identifies network errors (404/500), JavaScript runtime errors, and locator drift.
+- **Improved Evidence**: Automatically finds and links Playwright screenshots from `test-results` to the healing decision.
+- **Customizable Prompts**: All LLM system instructions are externalized in the `prompts/` directory for easy tweaking.
 
 ### 🔍 Explainable Artifacts
 
@@ -97,6 +97,16 @@ playwright install
 ## 🏗️ Architecture
 
 See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for a deep dive into the **Monitor -> Investigate -> Reason -> Act -> Report** pipeline.
+
+## 🛠️ Customization: Prompts & Behavior
+
+You can customize how the agents behave by editing the Markdown files in the `prompts/` directory:
+
+- `generator.md`: Instructions for the Test Generator agent.
+- `healer.md`: The strategy and JSON schema for the Self-Healer agent.
+- `vision.md`: Instruction set for the Vision-based agent.
+
+No code changes are required to tweak the agents' logic or output format!
 
 ## 🛠️ Development & Quality Control
 

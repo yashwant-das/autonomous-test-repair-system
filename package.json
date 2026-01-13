@@ -2,11 +2,11 @@
   "name": "lmstudio-qa-agent",
   "version": "1.0.0",
   "description": "A modular, LLM-powered QA automation agent that generates and maintains Playwright tests",
-  "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
     "test:unit": "export PYTHONPATH=$PYTHONPATH:$(pwd) && python3 -m unittest discover -v -s tests -p 'unit_test_*.py'",
     "prepare": "husky",
+    "husky": "husky",
     "lint": "npm run lint:js && npm run lint:py && npm run lint:md",
     "format": "npm run format:js && npm run format:py",
     "lint:js": "eslint .",

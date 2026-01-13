@@ -11,6 +11,7 @@ import sys
 
 from src.utils.browser import extract_domain, fetch_page_context
 from src.utils.llm import extract_code_block, get_client, get_model
+from src.utils.prompt_loader import load_prompt
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -30,27 +31,23 @@ def generate_test_script(url, feature_description):
         str: Generated TypeScript test code, or error message if generation fails
     """
     try:
+        # 1. Fetch page context (HTML)
         html_context = fetch_page_context(url)
 
         if "Error" in html_context:
             return html_context
 
-        system_instruction = """
-    You are a Senior QA Automation Engineer.
-    Write a complete, runnable Playwright (TypeScript) test file.
+        # 2. Load system instruction from prompts/generator.md
+        system_instruction = load_prompt("generator")
 
-    RULES:
-    1. Use 'import { test, expect } from "@playwright/test";'
-    2. Analyze the HTML to find 'data-test', 'id', or specific 'class' selectors.
-    3. Output ONLY the code block. No markdown backticks (```).
-    """
-
+        # 3. Create user prompt with target URL and description
         user_prompt = f"""
     TARGET URL: {url}
     USER STORY: {feature_description}
     PAGE CONTEXT: {html_context}
     """
 
+        # 4. Call LLM to generate code
         client = get_client()
         try:
             response = client.chat.completions.create(
@@ -65,6 +62,7 @@ def generate_test_script(url, feature_description):
             if not response.choices or not response.choices[0].message.content:
                 return "Error: LLM returned empty response"
 
+            # 5. Extract code block from response
             code = extract_code_block(response.choices[0].message.content)
             if not code:
                 return "Error: Could not extract code block from LLM response"

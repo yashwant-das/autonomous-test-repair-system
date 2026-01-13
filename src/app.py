@@ -217,7 +217,11 @@ with gr.Blocks(title="LM Studio QA Agent") as demo:
                     )
 
             def get_latest_artifacts():
-                """Scan ARTIFACTS_DIR for the most recent decision and timeline."""
+                """Scan ARTIFACTS_DIR for the most recent healing decision and timeline.
+
+                Returns:
+                    tuple: (decision_data, timeline_md) or (None, None) if not found
+                """
                 artifacts_dir = "tests/artifacts"
                 if not os.path.exists(artifacts_dir):
                     return None, None
@@ -274,7 +278,17 @@ with gr.Blocks(title="LM Studio QA Agent") as demo:
                     return {"error": str(e)}, f"Error reading artifacts: {str(e)}"
 
             def wrap_healer(file_obj):
-                """Handle file upload from Gradio and attempt to heal the test file."""
+                """Handle file upload from Gradio and attempt to heal the test file.
+
+                Copies the uploaded file to a local directory, triggers the healing pipeline,
+                and retrieves the resulting artifacts.
+
+                Args:
+                    file_obj: Gradio file object or string path
+
+                Returns:
+                    tuple: (result_text, decision, timeline)
+                """
                 if file_obj is None:
                     return "Please upload a test file.", None, ""
                 try:
