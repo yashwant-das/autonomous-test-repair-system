@@ -13,14 +13,15 @@ import sys
 # Add the project root to sys.path to support 'src.' imports when run as a script
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+import shutil
+
 import gradio as gr
 
+import src.utils.validation as validation_utils
 from src.agents.generator import generate_test_script, run_generated_test
 from src.agents.healer import attempt_healing
 from src.agents.vision import analyze_visual_ui
-import src.utils.validation as validation_utils
 from src.utils.validation import ValidationError
-import shutil
 
 # Custom CSS matching Gradio website style
 css = """

@@ -6,12 +6,11 @@ using LLM-based code generation.
 """
 
 import os
-import shlex
 import subprocess
 import sys
 
-from src.utils.browser import fetch_page_context, extract_domain
-from src.utils.llm import get_client, get_model, extract_code_block
+from src.utils.browser import extract_domain, fetch_page_context
+from src.utils.llm import extract_code_block, get_client, get_model
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -95,8 +94,8 @@ def run_generated_test(url, code_snippet, description="test"):
 
     try:
         # Using the new naming convention: [domain]_[description]_[YYYYMMDD_HHMMSS].spec.ts
-        from datetime import datetime
         import re
+        from datetime import datetime
 
         domain = extract_domain(url)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -119,8 +118,7 @@ def run_generated_test(url, code_snippet, description="test"):
 
         print(f"Running {filename}...")
 
-        # Sanitize filepath for subprocess
-        shlex.quote(filepath)
+        # Subprocess run uses a list, so shell quoting is handled automatically.
 
         try:
             result = subprocess.run(

@@ -1,8 +1,8 @@
-from dataclasses import dataclass, field, asdict
-from typing import List, Optional, Dict, Any
-from enum import Enum
 import json
+from dataclasses import asdict, dataclass, field
 from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class FailureType(str, Enum):

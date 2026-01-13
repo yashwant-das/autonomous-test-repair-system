@@ -1,10 +1,11 @@
 import unittest
+
 from src.agents.healer import apply_fix
 from src.models.healing_model import (
-    HealingDecision,
-    HealingAction,
-    FailureType,
     Evidence,
+    FailureType,
+    HealingAction,
+    HealingDecision,
 )
 
 

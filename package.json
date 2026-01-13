@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npx playwright test",
+    "test:unit": "export PYTHONPATH=$PYTHONPATH:$(pwd) && python3 -m unittest discover -v -s tests -p 'unit_test_*.py'",
     "prepare": "husky",
     "lint": "npm run lint:js && npm run lint:py && npm run lint:md",
     "format": "npm run format:js && npm run format:py",

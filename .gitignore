@@ -16,12 +16,17 @@ build/
 htmlcov/
 .mypy_cache/
 .ruff_cache/
+*.isorted
+*.py[cod]
+*$py.class
 
 # Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.eslintcache
+.prettiercache
 
 # Playwright
 test-results/
@@ -35,6 +40,9 @@ playwright/.cache/
 *.swp
 *.swo
 *~
+
+# Husky
+.husky/_
 
 # Environment variables
 .env
@@ -52,8 +60,7 @@ Thumbs.db
 # Project Specific
 tests/screenshots/*.png
 tests/artifacts/
-# tests/generated/*.spec.ts (Commented out to allow execution)
-# !tests/generated/broken_example.spec.ts
+# tests/generated/*.spec.ts (Commented out to allow the user to commit generated/demo tests)
 !tests/generated/.gitkeep
 
 # Gradio

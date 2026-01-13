@@ -94,11 +94,33 @@ playwright install
    - Click **Heal Test**.
    - Watch the **Timeline** and **Decision** populate!
 
----
-
 ## 🏗️ Architecture
 
 See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for a deep dive into the **Monitor -> Investigate -> Reason -> Act -> Report** pipeline.
+
+## 🛠️ Development & Quality Control
+
+We use a multi-layered linting and testing suite to ensure high-grade code quality.
+
+### Commands
+
+```bash
+# Run all quality checks (JS, Python, Markdown)
+npm run lint
+
+# Run Python unit tests
+npm run test:unit
+
+# Auto-format all code (Prettier + Black)
+npm run format
+```
+
+### Tooling Stack
+
+- **TypeScript/JS**: Prettier + ESLint (v9 Flat Config) + Playwright Plugin
+- **Python**: Black + isort + Flake8
+- **Documentation**: Markdownlint
+- **Automation**: Husky (Git Hooks) + lint-staged
 
 ## 🔮 Roadmap
 

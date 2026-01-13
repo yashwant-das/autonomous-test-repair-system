@@ -14,7 +14,7 @@ from datetime import datetime
 from playwright.sync_api import sync_playwright
 
 from src.utils.browser import extract_domain
-from src.utils.llm import get_client, get_model, extract_code_block
+from src.utils.llm import extract_code_block, get_client, get_model
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))

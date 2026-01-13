@@ -41,9 +41,9 @@ The system consists of three primary agents, each with strict boundaries:
 - **Responsibility:** Diagnoses failure, hypothesizes root cause, gathers evidence, patches the code, and verifies the fix.
 - **Key Feature:** **Hybrid Intelligence**. Uses Regex Heuristics for 100% confidence patterns and LLM for complex reasoning.
 - **Output:**
-   1. Patched test file.
-   2. `HealingDecision` JSON (Evidence + Reasoning).
-   3. `ExecutionTimeline` JSON (Audit trail).
+  1. Patched test file.
+  2. `HealingDecision` JSON (Evidence + Reasoning).
+  3. `ExecutionTimeline` JSON (Audit trail).
 
 ---
 
@@ -82,6 +82,6 @@ The Healer Agent operates in a strict, explainable pipeline:
 1. **Bounded Execution:** Max healing attempts per test run to prevent loops.
 2. **Structured Data:** All decisions follow strict JSON schemas (see `src/models/healing_model.py`).
 3. **Professional Pipeline**:
-    - **JS/TS**: Linted with ESLint 9 (Playwright plugin) and formatted with Prettier.
-    - **Python**: Linted with Flake8 and formatted with Black/isort.
-    - **Enforcement**: Husky pre-commit hooks ensure 0-lint-error code is never committed.
+   - **JS/TS**: Linted with ESLint 9 (Playwright plugin) and formatted with Prettier.
+   - **Python**: Linted with Flake8 and formatted with Black/isort.
+   - **Enforcement**: Husky pre-commit hooks ensure 0-lint-error code is never committed.
