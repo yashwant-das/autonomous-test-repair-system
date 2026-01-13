@@ -6,10 +6,11 @@
   "scripts": {
     "test": "npx playwright test",
     "prepare": "husky",
-    "lint": "npm run lint:js && npm run lint:py",
+    "lint": "npm run lint:js && npm run lint:py && npm run lint:md",
     "format": "npm run format:js && npm run format:py",
     "lint:js": "eslint .",
     "lint:py": "flake8 .",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
     "format:js": "prettier --write .",
     "format:py": "black . && isort ."
   },
@@ -22,6 +23,9 @@
       "black",
       "isort",
       "flake8"
+    ],
+    "*.md": [
+      "markdownlint-cli2"
     ]
   },
   "keywords": [
@@ -45,6 +49,7 @@
     "eslint-plugin-playwright": "^2.5.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "markdownlint-cli2": "^0.20.0",
     "prettier": "^3.7.4",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.0"

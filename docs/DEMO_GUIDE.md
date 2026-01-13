@@ -6,9 +6,11 @@
 
 1. Ensure LM Studio/OpenAI is running.
 2. Run the setup script:
+
    ```bash
    python scripts/setup_demo.py
    ```
+
    _This creates a "dirty" test case that simulates common flaky behavior._
 
 ---

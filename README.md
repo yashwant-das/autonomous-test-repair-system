@@ -2,17 +2,18 @@
 
 > **An Intelligent, Self-Healing, and Explainable Automated QA System**
 
-[![Status](https://img.shields.io/badge/Status-Beta-orange)]()
-[![Python](https://img.shields.io/badge/Python-3.14-blue)]()
-[![Playwright](https://img.shields.io/badge/Playwright-Latest-green)]()
+[![Status](https://img.shields.io/badge/Status-Beta-orange)](https://github.com/yashwant-das/lmstudio-qa-agent)
+[![Python](https://img.shields.io/badge/Python-3.14-blue)](https://github.com/yashwant-das/lmstudio-qa-agent)
+[![Python](https://img.shields.io/badge/Python-3.14-blue)](https://www.python.org/)
+[![Playwright](https://img.shields.io/badge/Playwright-Latest-green)](https://playwright.dev/)
 
 ## 🚨 The Problem: "Flaky Tests exist because Debugging is Hard"
 
 Modern QA automation is broken. When a test fails, engineers spend hours digging through logs to answer 3 simple questions:
 
-1.  **Is it a real bug?** (Or just network fluff?)
-2.  **What changed?** (Locator drift? CSS update?)
-3.  **How do I fix it?**
+1. **Is it a real bug?** (Or just network fluff?)
+2. **What changed?** (Locator drift? CSS update?)
+3. **How do I fix it?**
 
 Most "AI" solutions are black boxes that randomly try things until green. **We believe in Explainability.**
 
@@ -20,10 +21,10 @@ Most "AI" solutions are black boxes that randomly try things until green. **We b
 
 The **LM Studio QA Agent** doesn't just "fix" tests—it behaves like a Senior QA Engineer:
 
-1.  **Investigates**: Runs tests and captures high-fidelity evidence (logs, DOM snippets).
-2.  **Diagnoses**: Uses **Deterministic Heuristics** (Regex) for instant confidence 1.0 matches (`TIMEOUT`, `ASSERTION_FAIL`).
-3.  **Reasons**: Consults an LLM (guided by the heuristics) to plan a fix.
-4.  **Explains**: Outputs a structured **Execution Timeline** and **Decision JSON** proving _why_ it made the change.
+1. **Investigates**: Runs tests and captures high-fidelity evidence (logs, DOM snippets).
+2. **Diagnoses**: Uses **Deterministic Heuristics** (Regex) for instant confidence 1.0 matches (`TIMEOUT`, `ASSERTION_FAIL`).
+3. **Reasoning**: Consults an LLM (guided by the heuristics) to plan a fix.
+4. **Explains**: Outputs a structured **Execution Timeline** and **Decision JSON** proving _why_ it made the change.
 
 ---
 
@@ -66,31 +67,32 @@ A minimal, powerful UI to visualize the agent's brain:
 ```bash
 git clone https://github.com/yourusername/lmstudio-qa-agent.git
 cd lmstudio-qa-agent
+npm install           # Installs Playwright & Quality Control tools
 pip install -r requirements.txt
 playwright install
 ```
 
 ### Run the Demo
 
-1.  **Setup a Broken Test**:
+1. **Setup a Broken Test**:
 
-    ```bash
-    python scripts/setup_demo.py
-    ```
+   ```bash
+   python scripts/setup_demo.py
+   ```
 
-    _(Creates `tests/generated/demo_broken.spec.ts` with an intentional bug)_
+   _(Creates `tests/generated/demo_broken.spec.ts` with an intentional bug)_
 
-2.  **Launch the UI**:
+2. **Launch the UI**:
 
-    ```bash
-    python src/app.py
-    ```
+   ```bash
+   python src/app.py
+   ```
 
-3.  **Heal It**:
-    - Go to **Self-Healer** tab.
-    - Upload `tests/generated/demo_broken.spec.ts`.
-    - Click **Heal Test**.
-    - Watch the **Timeline** and **Decision** populate!
+3. **Heal It**:
+   - Go to **Self-Healer** tab.
+   - Upload `tests/generated/demo_broken.spec.ts`.
+   - Click **Heal Test**.
+   - Watch the **Timeline** and **Decision** populate!
 
 ---
 
