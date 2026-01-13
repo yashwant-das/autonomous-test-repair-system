@@ -4,10 +4,10 @@ Refactored for Phase 1: Explainable Healing.
 """
 
 import json
-import os
 import subprocess
 import sys
 from datetime import datetime
+from pathlib import Path
 
 from src.models.healing_model import (
     Evidence,
@@ -19,11 +19,12 @@ from src.models.healing_model import (
 from src.utils.llm import extract_json_block, get_client, get_model
 from src.utils.validation import validate_file_path
 
-# Add the project root to sys.path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
+# Resolve project root more robustly
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.append(str(PROJECT_ROOT))
 
-ARTIFACTS_DIR = "tests/artifacts"
-os.makedirs(ARTIFACTS_DIR, exist_ok=True)
+ARTIFACTS_DIR = PROJECT_ROOT / "tests" / "artifacts"
+ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def run_test(test_file):
@@ -31,11 +32,11 @@ def run_test(test_file):
     print(f"Running {test_file}...")
     try:
         result = subprocess.run(
-            ["npx", "playwright", "test", test_file],
+            ["npx", "playwright", "test", str(test_file)],
             capture_output=True,
             text=True,
             timeout=60,
-            cwd=os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+            cwd=str(PROJECT_ROOT),
         )
         return result
     except subprocess.TimeoutExpired:
@@ -57,17 +58,20 @@ def run_test(test_file):
 
 
 def gather_evidence(test_file, result):
-    """Collect evidence from the failed test run."""
+    """Collect evidence from the failed test run, including screenshots if available."""
     logs = result.stderr if result.stderr else result.stdout
 
-    # Placeholder for screenshot: usually Playwright traces/screenshots are in test-results/
+    # Try to find the most recent screenshot in test-results
     screenshot_path = None
-    results_dir = "test-results"
+    results_dir = PROJECT_ROOT / "test-results"
 
-    # Basic logic to find most recent screenshot in test-results if it exists
-    if os.path.exists(results_dir):
-        # This could be improved to find the specific test's screenshot
-        pass
+    if results_dir.exists():
+        # Look for the most recent .png file
+        screenshots = list(results_dir.glob("**/*.png"))
+        if screenshots:
+            # Sort by modification time to get the latest
+            latest_screenshot = max(screenshots, key=lambda p: p.stat().st_mtime)
+            screenshot_path = str(latest_screenshot)
 
     return Evidence(error_log=logs, screenshot_path=screenshot_path, dom_snippet=None)
 
@@ -129,6 +133,24 @@ def classify_failure_heuristic(logs: str) -> tuple[FailureType, float, str]:
                 "Locator failed but Playwright suggested content alternative",
             )
         return (FailureType.LOCATOR_NOT_FOUND, 0.7, "Locator resolved to 0 elements")
+
+    # 5. Page Crashes / 404 / 500
+    if "net::ERR_ABORTED" in logs or "404" in logs or "500" in logs:
+        return (
+            FailureType.POTENTIAL_APP_DEFECT,
+            0.8,
+            "Detected network error or HTTP failure status code",
+        )
+
+    # 6. JavaScript Errors
+    if "ReferenceError" in logs or "TypeError" in logs:
+        # Check if it's likely an app error or a test error
+        # (Heuristic: if it mentions a selector, maybe it's the test)
+        return (
+            FailureType.JAVASCRIPT_ERROR,
+            0.7,
+            "Detected JavaScript runtime error in logs",
+        )
 
     return (FailureType.UNKNOWN, 0.0, "No specific regex pattern matched")
 
@@ -301,13 +323,13 @@ def emit_artifacts(decision: HealingDecision, timeline: ExecutionTimeline):
 
     # 1. Healing Decision
     decision_filename = f"healing_decision_{timestamp}.json"
-    decision_path = os.path.join(ARTIFACTS_DIR, decision_filename)
+    decision_path = ARTIFACTS_DIR / decision_filename
     with open(decision_path, "w") as f:
         f.write(decision.to_json())
 
     # 2. Timeline
     timeline_filename = f"execution_timeline_{timestamp}.json"
-    timeline_path = os.path.join(ARTIFACTS_DIR, timeline_filename)
+    timeline_path = ARTIFACTS_DIR / timeline_filename
     with open(timeline_path, "w") as f:
         f.write(timeline.to_json())
 
@@ -319,8 +341,9 @@ def attempt_healing(test_file, max_retries=1):
     timeline = ExecutionTimeline()
     timeline.add_step("Start", f"Healing session started for {test_file}")
 
-    validated_path = validate_file_path(test_file)
-    if not os.path.exists(validated_path):
+    validated_path_str = validate_file_path(test_file)
+    validated_path = Path(validated_path_str)
+    if not validated_path.exists():
         msg = f"Error: File not found {validated_path}"
         timeline.add_step("Error", msg)
         return msg

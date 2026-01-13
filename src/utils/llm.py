@@ -19,7 +19,12 @@ API_KEY = os.getenv("LM_STUDIO_API_KEY", "lm-studio")
 DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "local-model")
 VISION_MODEL = os.getenv("VISION_MODEL", "local-model")
 
-client = OpenAI(base_url=LM_STUDIO_URL, api_key=API_KEY)
+# Initialize client once
+try:
+    client = OpenAI(base_url=LM_STUDIO_URL, api_key=API_KEY)
+except Exception as e:
+    print(f"Warning: Failed to initialize OpenAI client: {e}")
+    client = None
 
 
 def get_client():
