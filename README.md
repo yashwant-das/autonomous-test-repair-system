@@ -6,56 +6,56 @@
 [![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Latest-green)](https://playwright.dev/)
 
-## 🚨 The Problem: "Flaky Tests exist because Debugging is Hard"
+## 🚨 Problem Statement
 
-Modern QA automation is broken. When a test fails, engineers spend hours digging through logs to answer 3 simple questions:
+Modern QA automation faces significant scalability challenges. When tests fail, engineering teams invest substantial time analyzing logs to distinguish between:
 
-1. **Is it a real bug?** (Or just network fluff?)
-2. **What changed?** (Locator drift? CSS update?)
-3. **How do I fix it?**
+1. **Application Defects**: Genuine regressions or bugs.
+2. **Environment Issues**: Network latency or service unavailability.
+3. **Test Flakiness**: Locator drift or race conditions.
 
-Most "AI" solutions are black boxes. **We believe in Explainability.**
+Many existing AI-based solutions operate as "black boxes," automatically patching code without providing insight into the decision-making process. **This lack of explainability inhibits trust and complicates long-term maintenance.**
 
-## 💡 The Solution: Intelligent Healing
+## 💡 Solution Overview
 
-The **Autonomous Test Repair System** doesn't just "fix" tests—it behaves like a Senior QA Engineer:
+The **Autonomous Test Repair System** is an intelligent agent designed to reduce test maintenance overhead through automated diagnosis and remediation. It emulates senior-level QA capabilities by executing a four-stage pipeline:
 
-1. **Investigates**: Runs tests and captures high-fidelity evidence (logs, DOM snippets, screenshots).
-2. **Diagnoses**: Uses **Enhanced Heuristics** for instant detection of timeouts, network errors (404/500), and JS crashes.
-3. **Reasoning**: Consults an LLM (guided by heuristics and externalized prompts) to plan a fix.
-4. **Explains**: Outputs structured **Execution Timelines** and **Decision JSON** proving _why_ it made the change.
+1. **Investigate**: Captures high-fidelity evidence (logs, DOM trees, screenshots) during test execution.
+2. **Diagnose**: Utilizes **Deterministic Heuristics** for instant identification of common failures (timeouts, network errors) and **LLM Analysis** for complex logic.
+3. **Reason**: Synthesizes evidence to formulate a remediation plan, documented in a structured JSON artifact.
+4. **Act & Explain**: Applies the fix and generates a detailed **Execution Timeline**, proving the validity of the change.
 
 ---
 
-## 🌟 The "Wow" Factor
+## 🚀 Key Differentiators
 
-What makes this project stand out for recruiters and developers?
+What sets this autonomous agent apart from standard test automation tools?
 
-- **Zero-Black-Box Reasoning**: Every fix comes with a `HealingDecision` JSON. You can literally "read the agent's mind."
-- **Hybrid Intelligence**: We don't waste LLM tokens on obvious errors. Our **Deterministic Heuristics** handle the "low-hanging fruit" with 1.0 confidence.
-- **Enterprise-Grade DX**: A complete quality control pipeline (ESLint 9, Flake8, Husky, lint-staged) ensures a professional developer experience from day one.
-- **Vision-Augmented**: When the DOM is too complex, the **Vision Agent** looks at screenshots to understand the UI layout, just like a human would.
+- **Transparent Reasoning**: Every fix includes a `HealingDecision` JSON artifact, allowing you to trace exactly why a specific change was made.
+- **Hybrid Architecture**: Combines **Deterministic Heuristics** (Regex) for instant, low-cost error detection with **LLM Reasoning** for complex logic, optimizing both speed and cost.
+- **Production-Ready Toolchain**: Ships with a proven quality control pipeline (ESLint 9, Flake8, Husky, lint-staged) to ensure maintainable, industry-standard code.
+- **Multimodal Analysis**: When DOM scraping falls short, the **Vision Agent** analyzes screenshots to understand UI layout and context, mimicking human visual verification.
 
 ---
 
 ## ✨ Features
 
-- **Test Generation**: Scrapes web pages and generates runnable Playwright TypeScript tests.
+- **Automated Test Generation**: Analyzes DOM structures to generate robust Playwright TypeScript test suites.
 - **Vision Agent**: Uses vision-capable LLMs (e.g., Qwen-VL) to understand UI from screenshots.
 - **Self-Healing**: Automatically fixes broken tests by analyzing error logs and updating selectors.
 - **Enhanced Heuristics**: Deterministically identifies network errors, JavaScript runtime errors, and locator drift.
 - **Customizable Prompts**: All LLM system instructions are externalized in the `prompts/` directory for easy tweaking.
 - **Input Validation**: Comprehensive validation for URLs, file paths, and user inputs.
-- **Standard UI**: Clean, minimal Gradio interface following standard design patterns.
+- **Interactive Dashboard**: Centralized Gradio interface for managing test generation, vision context, and healing operations.
 
 ---
 
-## 📈 Understanding Confidence Scores
+## 📈 Confidence Scoring System
 
-The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis:
+The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis to facilitate risk assessment:
 
-- **1.0 (Certain)**: The failure matched a **Deterministic Heuristic** (Regex). No guessing involved.
-- **0.8 - 0.9 (Strong)**: The LLM identified the issue with high certainty based on logs and code context.
+- **1.0 (Deterministic)**: The failure matched a verified pattern (e.g., specific error codes). No probabilistic reasoning involved.
+- **0.8 - 0.9 (High)**: The LLM identified the root cause with strong evidence from logs and code context.
 - **< 0.7 (Low)**: The failure is ambiguous; the agent is proposing a "best-guess" fix that requires human review.
 
 ---

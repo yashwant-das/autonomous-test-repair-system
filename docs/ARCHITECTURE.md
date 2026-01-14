@@ -5,7 +5,7 @@
 
 ## 1. Problem Statement
 
-Automated test healing is often a "black box." When a test breaks and is automatically fixed, engineers (and recruiters) ask:
+Automated test healing is often a "black box." When a test breaks and is automatically fixed, engineering teams often ask:
 
 1. _Why_ did it fail?
 2. _Why_ did the agent choose this specific fix?

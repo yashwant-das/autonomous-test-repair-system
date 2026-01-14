@@ -1,6 +1,6 @@
 # 🏥 Healing Scenarios: Showcase of Intelligence
 
-> This document details real-world scenarios where the **Healer Agent** demonstrates its "Senior QA" reasoning.
+> This document details real-world scenarios where the **Healer Agent** demonstrates its reasoning capabilities.
 
 ---
 
@@ -26,7 +26,7 @@
 
 - **Heuristic Detection**: The agent uses Regex to find `500` in the Playwright logs.
 - **Intelligence**: Instead of trying to "fix" the code, the agent correctly identifies this as a **POTENTIAL_APP_DEFECT** with **0.8 confidence**.
-- **The "Wow" Factor**: The agent reports that the code is likely fine, but the environment is unstable, saving the developer from chasing "ghost" bugs in the test logic.
+- **Operational Insight**: The agent reports that the code is likely fine, but the environment is unstable, saving the developer from chasing "ghost" bugs in the test logic.
 
 ## 4. The "Race Condition" Scenario
 
