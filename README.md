@@ -154,11 +154,37 @@ python -m src.agents.healer tests/generated/broken_example.spec.ts
 
 ## 🧪 Example Scenarios
 
-1. **Form Authentication**: [The Internet Login](https://the-internet.herokuapp.com/login). Proves handling of standard forms.
-2. **Dynamic React Apps**: [TodoMVC](https://demo.playwright.dev/todomvc/). Demonstrates client-side rendered app support.
-3. **Real-world Search**: [Wikipedia AI Search](https://www.wikipedia.org). Validates multi-step verification.
-4. **Vision Agent**: [SauceDemo Vision](https://www.saucedemo.com). Uses screenshots to identify elements.
-5. **Self-Healer**: Automatically repairs incorrect selectors by analyzing logs. See [HEALING_SCENARIOS.md](docs/HEALING_SCENARIOS.md) for a list of common "heals."
+### 1. Test Generator (Form Authentication)
+
+- **URL**: [https://the-internet.herokuapp.com/login](https://the-internet.herokuapp.com/login)
+- **Scenario**: Login with `tomsmith` and `SuperSecretPassword!`. Verify the success message appears.
+- **Goal**: Proves the agent can handle standard HTML forms and success notifications.
+
+### 2. Test Generator (Dynamic React Apps)
+
+- **URL**: [https://demo.playwright.dev/todomvc/](https://demo.playwright.dev/todomvc/)
+- **Scenario**: Add a todo item named 'Buy Milk'. Verify it appears in the list.
+- **Goal**: Demonstrates capabilities with heavily dynamic, client-side rendered JavaScript apps.
+
+### 3. Test Generator (Real-world Search)
+
+- **URL**: [https://www.wikipedia.org](https://www.wikipedia.org)
+- **Scenario**: Type 'AI' in the search input and press Enter. Verify that the URL contains 'Artificial_intelligence' and the main heading (h1) says 'Artificial intelligence'.
+- **Goal**: Validates search interactions and multiple verification steps on professional sites.
+
+### 4. Vision Agent
+
+- **URL**: [https://www.saucedemo.com](https://www.saucedemo.com)
+- **Scenario**: Login with `standard_user` / `secret_sauce`.
+- **Goal**: Uses visual analysis to identify elements without relying solely on HTML source.
+
+### 5. Self-Healer
+
+- **Input**: A broken test file like `broken_example.spec.ts`.
+- **Command**: `python -m src.agents.healer tests/generated/broken_example.spec.ts`
+- **Goal**: Automatically repairs incorrect selectors and labels by analyzing Playwright error logs.
+- **Deep Dive**: See [HEALING_SCENARIOS.md](docs/HEALING_SCENARIOS.md) for a detailed breakdown of how the agent resolves specific failures like Locator Drift, Network Flakiness, and Race Conditions.
+- **Trial**: To see it in action, purposefully introduce mistakes into the locator IDs or button names in the script and watch the agent heal them!
 
 ---
 
