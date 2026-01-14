@@ -1,8 +1,8 @@
-# 🤖 LM Studio QA Agent
+# 🤖 Autonomous Test Repair System
 
 > **An Intelligent, Self-Healing, and Explainable Automated QA System**
 
-[![Status](https://img.shields.io/badge/Status-Beta-orange)](https://github.com/yashwant-das/lmstudio-qa-agent)
+[![Status](https://img.shields.io/badge/Status-Beta-orange)](https://github.com/yashwant-das/autonomous-test-repair-system)
 [![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Latest-green)](https://playwright.dev/)
 
@@ -18,7 +18,7 @@ Most "AI" solutions are black boxes. **We believe in Explainability.**
 
 ## 💡 The Solution: Intelligent Healing
 
-The **LM Studio QA Agent** doesn't just "fix" tests—it behaves like a Senior QA Engineer:
+The **Autonomous Test Repair System** doesn't just "fix" tests—it behaves like a Senior QA Engineer:
 
 1. **Investigates**: Runs tests and captures high-fidelity evidence (logs, DOM snippets, screenshots).
 2. **Diagnoses**: Uses **Enhanced Heuristics** for instant detection of timeouts, network errors (404/500), and JS crashes.

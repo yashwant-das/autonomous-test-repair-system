@@ -1,6 +1,6 @@
 # Architecture & Design
 
-> **Single Source of Truth** for the Explainable QA Agent.
+> **Single Source of Truth** for the Autonomous Test Repair System.
 > Last Updated: January 2026 (Phase 4 Complete)
 
 ## 1. Problem Statement

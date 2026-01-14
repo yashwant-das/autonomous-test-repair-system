@@ -1,6 +1,6 @@
 # Docker Workflow Guide
 
-This guide covers building and running the QA Agent in Docker, including manual debugging and healing workflows.
+This guide covers building and running the Autonomous Test Repair System in Docker, including manual debugging and healing workflows.
 
 ## Prerequisites
 

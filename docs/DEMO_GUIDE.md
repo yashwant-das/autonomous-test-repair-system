@@ -1,4 +1,4 @@
-# 🎬 Killer Demo Guide: LM Studio QA Agent
+# 🎬 Killer Demo Guide: Autonomous Test Repair System
 
 > Follow this script to showcase the "Senior QA Engineer" intelligence of this agent in under 3 minutes.
 

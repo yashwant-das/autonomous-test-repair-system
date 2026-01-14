@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/playwright/python:v1.57.0-noble
 
 LABEL maintainer="QA Team"
-LABEL description="LM Studio QA Agent"
+LABEL description="Autonomous Test Repair System"
 
 WORKDIR /app
 
