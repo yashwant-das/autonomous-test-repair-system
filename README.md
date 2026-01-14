@@ -1,4 +1,4 @@
-# LM Studio QA Agent
+# Autonomous Test Repair System
 
 A modular, LLM-powered QA automation agent that generates and maintains Playwright tests.
 
