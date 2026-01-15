@@ -1,4 +1,4 @@
-# 🏥 Healing Scenarios: Showcase of Intelligence
+# Healing Scenarios: Showcase of Intelligence
 
 > This document details real-world scenarios where the **Healer Agent** demonstrates its reasoning capabilities.
 
@@ -38,6 +38,6 @@
 
 ---
 
-### 🚀 Try it Yourself
+### Try it Yourself
 
 Purposefully break any generated script (change a locator, delete a character in a selector) and run it through the **Self-Healer** tab in the UI.

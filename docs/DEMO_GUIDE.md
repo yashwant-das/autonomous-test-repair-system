@@ -1,4 +1,4 @@
-# 🎬 Product Demo Guide: Autonomous Test Repair System
+# Product Demo Guide: Autonomous Test Repair System
 
 > Follow this script to showcase the "Senior QA Engineer" intelligence of this agent in under 3 minutes.
 
@@ -17,7 +17,7 @@
 
 ---
 
-## 🎭 Demo Walkthrough
+## Demo Walkthrough
 
 ### 1. The Setup: "AI with Intent" (0:00 - 0:45)
 
@@ -41,7 +41,7 @@
 
 ---
 
-## 💎 Key Architectural Highlights
+## Key Architectural Highlights
 
 - **Explainability**: "I explicitly designed the system to output its internal chain of thought as JSON artifacts."
 - **Hybrid Intelligence**: "I balanced deterministic code (Regex) with probabilistic AI (LLM) to maximize speed and accuracy."

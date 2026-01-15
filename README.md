@@ -6,7 +6,7 @@
 [![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
 [![Playwright](https://img.shields.io/badge/Playwright-Latest-green)](https://playwright.dev/)
 
-## 🚨 Problem Statement
+## Problem Statement
 
 Modern QA automation faces significant scalability challenges. When tests fail, engineering teams invest substantial time analyzing logs to distinguish between:
 
@@ -16,7 +16,7 @@ Modern QA automation faces significant scalability challenges. When tests fail, 
 
 Many existing AI-based solutions operate as "black boxes," automatically patching code without providing insight into the decision-making process. **This lack of explainability inhibits trust and complicates long-term maintenance.**
 
-## 💡 Solution Overview
+## Solution Overview
 
 The **Autonomous Test Repair System** is an intelligent agent designed to reduce test maintenance overhead through automated diagnosis and remediation. It emulates senior-level QA capabilities by executing a four-stage pipeline:
 
@@ -27,7 +27,7 @@ The **Autonomous Test Repair System** is an intelligent agent designed to reduce
 
 ---
 
-## 🚀 Key Differentiators
+## Key Differentiators
 
 What sets this autonomous agent apart from standard test automation tools?
 
@@ -38,7 +38,7 @@ What sets this autonomous agent apart from standard test automation tools?
 
 ---
 
-## ✨ Features
+## Features
 
 - **Automated Test Generation**: Analyzes DOM structures to generate robust Playwright TypeScript test suites.
 - **Vision Agent**: Uses vision-capable LLMs (e.g., Qwen-VL) to understand UI from screenshots.
@@ -50,7 +50,7 @@ What sets this autonomous agent apart from standard test automation tools?
 
 ---
 
-## 📈 Confidence Scoring System
+## Confidence Scoring System
 
 The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis to facilitate risk assessment:
 
@@ -60,7 +60,7 @@ The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis to facil
 
 ---
 
-## 🏗️ Project Structure
+## Project Structure
 
 ```text
 .
@@ -98,7 +98,7 @@ The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis to facil
 
 ---
 
-## 🚀 Setup
+## Setup
 
 ### Option 1: Docker (Recommended)
 
@@ -137,7 +137,7 @@ Access the Gradio interface at `http://localhost:7860`. See [DOCKER.md](DOCKER.m
 
 ---
 
-## 🛠️ Usage
+## Usage
 
 ### Launch the UI
 
@@ -155,7 +155,7 @@ python -m src.agents.healer tests/generated/broken_example.spec.ts
 
 ---
 
-## 🧪 Example Scenarios
+## Example Scenarios
 
 ### 1. Test Generator (Form Authentication)
 
@@ -191,7 +191,7 @@ python -m src.agents.healer tests/generated/broken_example.spec.ts
 
 ---
 
-## ⚙️ Configuration & Quality Control
+## Configuration & Quality Control
 
 ### Environment Variables
 
@@ -220,7 +220,7 @@ npm run format    # Auto-format all code
 
 ---
 
-## 🔒 Security
+## Security
 
 - Input validation prevents malicious URLs and path traversal.
 - File operations restricted to allowed directories.
@@ -228,6 +228,6 @@ npm run format    # Auto-format all code
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for a deep dive into the **Monitor -> Investigate -> Reason -> Act -> Report** pipeline.
