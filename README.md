@@ -69,6 +69,8 @@ The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis to facil
 │   │   ├── generator.py # Test generation agent
 │   │   ├── healer.py    # Self-healing agent
 │   │   └── vision.py    # Vision-based test generation
+│   ├── models/          # Data models and schemas
+│   │   └── healing_model.py # Healing artifacts & execution timeline models
 │   ├── utils/           # Shared utilities
 │   │   ├── browser.py   # Browser automation (Playwright)
 │   │   ├── llm.py       # LLM client configuration
@@ -81,6 +83,7 @@ The agent assigns a **Confidence Score (0.0 - 1.0)** to every diagnosis to facil
 │   ├── DEMO_GUIDE.md    # Scripted guide for a killing demo
 │   └── HEALING_SCENARIOS.md # Story-driven examples of healing logic
 ├── tests/
+│   ├── unit_test_*.py   # Logic & heuristic unit tests
 │   ├── generated/       # Storage for generated .spec.ts files
 │   ├── artifacts/       # Healing decisions and execution timelines
 │   └── screenshots/     # Storage for Vision Agent debug screenshots
