@@ -1,6 +1,7 @@
 """
 Input validation utilities for the QA Agent.
 """
+
 import os
 import re
 from urllib.parse import urlparse
@@ -8,6 +9,7 @@ from urllib.parse import urlparse
 
 class ValidationError(Exception):
     """Custom exception for validation errors."""
+
     pass
 
 
@@ -25,11 +27,13 @@ def validate_url(url: str) -> bool:
 
     try:
         result = urlparse(url.strip())
-        return all([
-            result.scheme in ['http', 'https'],
-            result.netloc,
-            len(url) <= 2048  # Reasonable URL length limit
-        ])
+        return all(
+            [
+                result.scheme in ["http", "https"],
+                result.netloc,
+                len(url) <= 2048,  # Reasonable URL length limit
+            ]
+        )
     except Exception:
         return False
 
@@ -94,7 +98,9 @@ def validate_file_path(file_path: str, allowed_dirs: list = None) -> str:
             continue
 
     if not is_allowed:
-        raise ValidationError(f"File path must be within allowed directories: {allowed_dirs}")
+        raise ValidationError(
+            f"File path must be within allowed directories: {allowed_dirs}"
+        )
 
     return abs_path
 
@@ -125,13 +131,15 @@ def validate_description(description: str, max_length: int = 500) -> str:
 
     # Check for potentially dangerous patterns
     dangerous_patterns = [
-        r'[<>]',  # HTML tags
-        r'\.\./',  # Path traversal attempts
-        r'[;&|`$]',  # Command injection attempts
+        r"[<>]",  # HTML tags
+        r"\.\./",  # Path traversal attempts
+        r"[;&|`$]",  # Command injection attempts
     ]
 
     for pattern in dangerous_patterns:
         if re.search(pattern, description):
-            raise ValidationError(f"Description contains invalid characters: {description[:50]}...")
+            raise ValidationError(
+                f"Description contains invalid characters: {description[:50]}..."
+            )
 
     return description

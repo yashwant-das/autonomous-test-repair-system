@@ -4,17 +4,17 @@ Test generation agent for creating Playwright test scripts.
 This module generates TypeScript Playwright tests from URLs and feature descriptions
 using LLM-based code generation.
 """
+
 import os
-import shlex
 import subprocess
 import sys
 
-from src.utils.browser import fetch_page_context, extract_domain
-from src.utils.llm import get_client, get_model, extract_code_block
+from src.utils.browser import extract_domain, fetch_page_context
+from src.utils.llm import extract_code_block, get_client, get_model
+from src.utils.prompt_loader import load_prompt
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
-sys.path.append(os.path.abspath(os.path.join(
-    os.path.dirname(__file__), "..", "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 TEST_DIR = "tests/generated"
 os.makedirs(TEST_DIR, exist_ok=True)
@@ -31,34 +31,30 @@ def generate_test_script(url, feature_description):
         str: Generated TypeScript test code, or error message if generation fails
     """
     try:
+        # 1. Fetch page context (HTML)
         html_context = fetch_page_context(url)
 
         if "Error" in html_context:
             return html_context
 
-        system_instruction = """
-    You are a Senior QA Automation Engineer. 
-    Write a complete, runnable Playwright (TypeScript) test file.
-    
-    RULES:
-    1. Use 'import { test, expect } from "@playwright/test";'
-    2. Analyze the HTML to find 'data-test', 'id', or specific 'class' selectors.
-    3. Output ONLY the code block. No markdown backticks (```).
-    """
+        # 2. Load system instruction from prompts/generator.md
+        system_instruction = load_prompt("generator")
 
+        # 3. Create user prompt with target URL and description
         user_prompt = f"""
     TARGET URL: {url}
     USER STORY: {feature_description}
     PAGE CONTEXT: {html_context}
     """
 
+        # 4. Call LLM to generate code
         client = get_client()
         try:
             response = client.chat.completions.create(
                 model=get_model(),
                 messages=[
                     {"role": "system", "content": system_instruction},
-                    {"role": "user", "content": user_prompt}
+                    {"role": "user", "content": user_prompt},
                 ],
                 temperature=0.1,
             )
@@ -66,6 +62,7 @@ def generate_test_script(url, feature_description):
             if not response.choices or not response.choices[0].message.content:
                 return "Error: LLM returned empty response"
 
+            # 5. Extract code block from response
             code = extract_code_block(response.choices[0].message.content)
             if not code:
                 return "Error: Could not extract code block from LLM response"
@@ -95,17 +92,17 @@ def run_generated_test(url, code_snippet, description="test"):
 
     try:
         # Using the new naming convention: [domain]_[description]_[YYYYMMDD_HHMMSS].spec.ts
-        from datetime import datetime
         import re
+        from datetime import datetime
 
         domain = extract_domain(url)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Meaningful snake_case sanitization (limited to alphanumeric and simple hyphens)
-        clean_desc = re.sub(r'[^a-zA-Z0-9]', '_', description).lower()
+        clean_desc = re.sub(r"[^a-zA-Z0-9]", "_", description).lower()
         # Remove consecutive underscores
-        clean_desc = re.sub(r'_+', '_', clean_desc)
-        snake_desc = clean_desc[:40].strip('_')
+        clean_desc = re.sub(r"_+", "_", clean_desc)
+        snake_desc = clean_desc[:40].strip("_")
 
         filename = f"{domain}_{snake_desc}_{timestamp}.spec.ts"
         filepath = os.path.join(TEST_DIR, filename)
@@ -119,8 +116,7 @@ def run_generated_test(url, code_snippet, description="test"):
 
         print(f"Running {filename}...")
 
-        # Sanitize filepath for subprocess
-        safe_filepath = shlex.quote(filepath)
+        # Subprocess run uses a list, so shell quoting is handled automatically.
 
         try:
             result = subprocess.run(
@@ -128,8 +124,9 @@ def run_generated_test(url, code_snippet, description="test"):
                 capture_output=True,
                 text=True,
                 timeout=45,
-                cwd=os.path.dirname(os.path.dirname(
-                    os.path.dirname(__file__)))  # Project root
+                cwd=os.path.dirname(
+                    os.path.dirname(os.path.dirname(__file__))
+                ),  # Project root
             )
 
             if result.returncode == 0:

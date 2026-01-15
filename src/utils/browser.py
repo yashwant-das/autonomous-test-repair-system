@@ -4,6 +4,7 @@ Browser automation utilities for page context extraction.
 This module provides functions for fetching and processing web page content
 using Playwright and BeautifulSoup.
 """
+
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
@@ -18,6 +19,7 @@ def extract_domain(url):
         str: Clean domain name (e.g., "example" from "https://www.example.com")
     """
     from urllib.parse import urlparse
+
     try:
         netloc = urlparse(url).netloc
         domain = netloc.replace("www.", "").split(".")[0]
@@ -63,9 +65,11 @@ def fetch_page_context(url, max_chars=30000):
             browser.close()
 
             try:
-                soup = BeautifulSoup(content, 'html.parser')
+                soup = BeautifulSoup(content, "html.parser")
                 # Remove junk to save tokens
-                for script in soup(["script", "style", "svg", "path", "meta", "link", "noscript"]):
+                for script in soup(
+                    ["script", "style", "svg", "path", "meta", "link", "noscript"]
+                ):
                     script.decompose()
 
                 if soup.body:

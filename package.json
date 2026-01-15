@@ -2,9 +2,32 @@
   "name": "autonomous-test-repair-system",
   "version": "1.0.0",
   "description": "A modular, LLM-powered QA automation agent that generates and maintains Playwright tests",
-  "main": "index.js",
   "scripts": {
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "test:unit": "export PYTHONPATH=$PYTHONPATH:$(pwd) && python3 -m unittest discover -v -s tests -p 'unit_test_*.py'",
+    "prepare": "husky",
+    "husky": "husky",
+    "lint": "npm run lint:js && npm run lint:py && npm run lint:md",
+    "format": "npm run format:js && npm run format:py",
+    "lint:js": "eslint .",
+    "lint:py": "flake8 .",
+    "lint:md": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
+    "format:js": "prettier --write .",
+    "format:py": "black . && isort ."
+  },
+  "lint-staged": {
+    "*.{js,cjs,ts}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.py": [
+      "black",
+      "isort",
+      "flake8"
+    ],
+    "*.md": [
+      "markdownlint-cli2"
+    ]
   },
   "keywords": [
     "playwright",
@@ -18,8 +41,19 @@
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@playwright/test": "^1.57.0",
-    "typescript": "^5.9.3"
+    "@typescript-eslint/eslint-plugin": "^8.53.0",
+    "@typescript-eslint/parser": "^8.53.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "markdownlint-cli2": "^0.20.0",
+    "prettier": "^3.7.4",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.0"
   },
   "dependencies": {
     "playwright": "^1.57.0",

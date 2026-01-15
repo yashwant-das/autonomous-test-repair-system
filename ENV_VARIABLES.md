@@ -62,4 +62,3 @@ LM_STUDIO_API_KEY=lm-studio
 DEFAULT_MODEL=qwen3-coder-30b
 VISION_MODEL=qwen3-vl-30b
 ```
-
