@@ -1,6 +1,6 @@
 # Environment Variables
 
-This document describes all environment variables used by the LM Studio QA Agent.
+This document describes all environment variables used by the Autonomous Test Repair System.
 
 ## Configuration
 

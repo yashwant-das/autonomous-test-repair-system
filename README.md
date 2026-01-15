@@ -1,4 +1,4 @@
-# 🤖 Autonomous Test Repair System
+# Autonomous Test Repair System
 
 > **An Intelligent, Self-Healing, and Explainable Automated QA System**
 
