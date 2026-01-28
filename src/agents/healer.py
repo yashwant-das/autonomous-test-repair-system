@@ -354,6 +354,23 @@ def attempt_healing(test_file, max_retries=1):
     result = run_test(validated_path)
     if result.returncode == 0:
         timeline.add_step("InitialRun", "Test passed, no healing needed")
+
+        # Create a placeholder decision for the records
+        success_decision = HealingDecision(
+            test_file=test_file,
+            failure_type=FailureType.UNKNOWN,
+            failure_summary="Test passed initially",
+            evidence=gather_evidence(validated_path, result),
+            hypothesis="No repairs needed.",
+            confidence_score=1.0,
+            reasoning_steps=["Initial execution passed."],
+            action_taken=HealingAction(
+                original_code="", fixed_code="", description="None"
+            ),
+            verification_passed=True,
+        )
+        emit_artifacts(success_decision, timeline)
+
         logger.info("--- Healing Session Completed: Test passed initially ---")
         return "Test passed (No healing needed)."
 
