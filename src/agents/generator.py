@@ -11,6 +11,7 @@ import subprocess
 import sys
 
 from src.utils.browser import extract_domain, fetch_page_context
+from src.utils.formatting import format_test_result
 from src.utils.llm import extract_code_block, get_client, get_model
 from src.utils.prompt_loader import load_prompt
 
@@ -134,11 +135,11 @@ def run_generated_test(url, code_snippet, description="test"):
             )
 
             if result.returncode == 0:
-                return f"TEST PASSED!\nStored in: {filepath}\n\nLogs:\n{result.stdout}"
+                return format_test_result(filepath, result.stdout, success=True)
             else:
                 # Check if stdout has more useful info than stderr in case of playwright failures
                 logs = result.stdout if result.stdout else result.stderr
-                return f"TEST FAILED.\nStored in: {filepath}\n\nLogs:\n{logs}"
+                return format_test_result(filepath, logs, success=False)
 
         except subprocess.TimeoutExpired:
             return f"Error: Test execution timed out after 45 seconds.\nStored in: {filepath}"
