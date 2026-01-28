@@ -23,31 +23,53 @@ VISION_MODEL=local-model
 
 ## Variable Descriptions
 
+### `LLM_PROVIDER`
+- **Type**: String
+- **Default**: `lm_studio`
+- **Options**: `lm_studio`, `ollama`
+- **Description**: Determines which LLM service to connect to.
+
 ### `LM_STUDIO_URL`
 
 - **Type**: String (URL)
 - **Default**: `http://localhost:1234/v1`
-- **Description**: The base URL where LM Studio is running. This should point to the v1 API endpoint.
+- **Description**: The base URL when `LLM_PROVIDER` is set to `lm_studio`.
 
 ### `LM_STUDIO_API_KEY`
 
 - **Type**: String
 - **Default**: `lm-studio`
-- **Description**: API key for authenticating with LM Studio. The default value works for local LM Studio instances.
+- **Description**: API key for LM Studio.
 
-### `DEFAULT_MODEL`
+### `OLLAMA_URL`
+
+- **Type**: String (URL)
+- **Default**: `http://localhost:11434/v1`
+- **Description**: The base URL when `LLM_PROVIDER` is set to `ollama`.
+
+### `LM_STUDIO_MODEL`
 
 - **Type**: String
-- **Default**: `local-model`
-- **Description**: The name of the model to use for text generation (test generation and healing). This should match a
-  model loaded in LM Studio.
+- **Default**: `qwen/qwen3-coder-30b`
+- **Description**: Text generation model name for LM Studio.
 
-### `VISION_MODEL`
+### `LM_STUDIO_VISION_MODEL`
 
 - **Type**: String
-- **Default**: `local-model`
-- **Description**: The name of the vision-capable model to use for image analysis. This should match a vision model
-  loaded in LM Studio (e.g., `qwen3-vl-30b`).
+- **Default**: `qwen/qwen3-vl-30b`
+- **Description**: Vision model name for LM Studio.
+
+### `OLLAMA_MODEL`
+
+- **Type**: String
+- **Default**: `qwen3-coder:latest`
+- **Description**: Text generation model name for Ollama.
+
+### `OLLAMA_VISION_MODEL`
+
+- **Type**: String
+- **Default**: `qwen3-vl:30b`
+- **Description**: Vision model name for Ollama.
 
 ## Usage
 
@@ -57,8 +79,11 @@ listed above will be used.
 ## Example `.env` File
 
 ```bash
-LM_STUDIO_URL=http://localhost:1234/v1
 LM_STUDIO_API_KEY=lm-studio
-DEFAULT_MODEL=qwen3-coder-30b
-VISION_MODEL=qwen3-vl-30b
+LLM_PROVIDER=lm_studio
+OLLAMA_URL=http://localhost:11434/v1
+LM_STUDIO_MODEL=qwen/qwen3-coder-30b
+LM_STUDIO_VISION_MODEL=qwen/qwen3-vl-30b
+OLLAMA_MODEL=qwen3-coder:latest
+OLLAMA_VISION_MODEL=qwen3-vl:30b
 ```

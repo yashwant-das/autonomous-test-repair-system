@@ -15,13 +15,33 @@ load_dotenv()
 
 # Configuration from environment variables
 LM_STUDIO_URL = os.getenv("LM_STUDIO_URL", "http://localhost:1234/v1")
-API_KEY = os.getenv("LM_STUDIO_API_KEY", "lm-studio")
-DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "local-model")
-VISION_MODEL = os.getenv("VISION_MODEL", "local-model")
+LM_STUDIO_API_KEY = os.getenv("LM_STUDIO_API_KEY", "lm-studio")
 
-# Initialize client once
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434/v1")
+OLLAMA_API_KEY = "ollama"  # Ollama doesn't require an API key, but client expects one
+
+# Provider selection (default: lm_studio)
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "lm_studio").lower()
+
+# Model Configuration
+LM_STUDIO_MODEL = os.getenv("LM_STUDIO_MODEL", "qwen/qwen3-coder-30b")
+LM_STUDIO_VISION_MODEL = os.getenv("LM_STUDIO_VISION_MODEL", "qwen/qwen3-vl-30b")
+
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:32b")
+OLLAMA_VISION_MODEL = os.getenv("OLLAMA_VISION_MODEL", "llama3.2-vision")
+
+# Initialize client based on provider
 try:
-    client = OpenAI(base_url=LM_STUDIO_URL, api_key=API_KEY)
+    if LLM_PROVIDER == "ollama":
+        base_url = OLLAMA_URL
+        api_key = OLLAMA_API_KEY
+        print(f"Initializing OpenAI client with Ollama provider at {base_url}")
+    else:  # default to lm_studio
+        base_url = LM_STUDIO_URL
+        api_key = LM_STUDIO_API_KEY
+        print(f"Initializing OpenAI client with LM Studio provider at {base_url}")
+
+    client = OpenAI(base_url=base_url, api_key=api_key)
 except Exception as e:
     print(f"Warning: Failed to initialize OpenAI client: {e}")
     client = None
@@ -37,7 +57,7 @@ def get_client():
 
 
 def get_model(vision=False):
-    """Get the appropriate model name based on use case.
+    """Get the appropriate model name based on provider and use case.
 
     Args:
         vision: If True, returns vision model; otherwise returns default model
@@ -45,7 +65,10 @@ def get_model(vision=False):
     Returns:
         str: Model name string
     """
-    return VISION_MODEL if vision else DEFAULT_MODEL
+    if LLM_PROVIDER == "ollama":
+        return OLLAMA_VISION_MODEL if vision else OLLAMA_MODEL
+    else:  # default to lm_studio
+        return LM_STUDIO_VISION_MODEL if vision else LM_STUDIO_MODEL
 
 
 def extract_code_block(llm_response):

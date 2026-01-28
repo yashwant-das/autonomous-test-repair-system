@@ -112,6 +112,7 @@ docker build -t qa-agent .
 docker run -p 7860:7860 \
   --add-host=host.docker.internal:host-gateway \
   -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
+  -e LLM_PROVIDER="lm_studio" \
   qa-agent
 ```
 
@@ -132,8 +133,8 @@ Access the Gradio interface at `http://localhost:7860`. See [DOCKER.md](DOCKER.m
    npx playwright install
    ```
 
-3. **Configure LM Studio**:
-   Ensure LM Studio is running and models (e.g., Qwen-Coder, Qwen-VL) are loaded at `http://localhost:1234/v1`.
+3. **Configure LLM Provider**:
+   Create a `.env` file and set `LLM_PROVIDER` to either `lm_studio` or `ollama`. Configure the corresponding URL and models.
 
 ---
 

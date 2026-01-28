@@ -233,10 +233,11 @@ docker run -p 7861:7860 ...
 
 Key environment variables for Docker:
 
+- `LLM_PROVIDER`: Service provider (`lm_studio` or `ollama`)
 - `LM_STUDIO_URL`: LM Studio API endpoint (default: `http://localhost:1234/v1`)
-- `LM_STUDIO_API_KEY`: API key for LM Studio (default: `lm-studio`)
-- `DEFAULT_MODEL`: Default model name (default: `local-model`)
-- `VISION_MODEL`: Vision model name (default: `local-model`)
+- `OLLAMA_URL`: Ollama API endpoint (default: `http://localhost:11434/v1`)
+- `LM_STUDIO_MODEL` / `OLLAMA_MODEL`: Text generation model name
+- `LM_STUDIO_VISION_MODEL` / `OLLAMA_VISION_MODEL`: Vision description model name
 - `GRADIO_SERVER_NAME`: Set to `0.0.0.0` in Dockerfile for container access
 - `PYTHONUNBUFFERED`: Set to `1` for real-time log output
 

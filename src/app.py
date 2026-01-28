@@ -34,7 +34,6 @@ css = """
 h1 {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-weight: 600;
-    color: #1f2937;
     letter-spacing: -0.025em;
 }
 /* Clean component styling */
