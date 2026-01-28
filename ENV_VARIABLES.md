@@ -24,6 +24,7 @@ VISION_MODEL=local-model
 ## Variable Descriptions
 
 ### `LLM_PROVIDER`
+
 - **Type**: String
 - **Default**: `lm_studio`
 - **Options**: `lm_studio`, `ollama`
