@@ -370,7 +370,6 @@ def attempt_healing(test_file, max_retries=1):
             verification_passed=True,
         )
         emit_artifacts(success_decision, timeline)
-
         logger.info("--- Healing Session Completed: Test passed initially ---")
         return "Test passed (No healing needed)."
 

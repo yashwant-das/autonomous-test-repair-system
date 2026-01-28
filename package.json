@@ -21,9 +21,9 @@
       "eslint --fix"
     ],
     "*.py": [
-      "black",
-      "isort",
-      "flake8"
+      "bash -c 'black \"$0\" || ./.venv/bin/black \"$0\"'",
+      "bash -c 'isort \"$0\" || ./.venv/bin/isort \"$0\"'",
+      "bash -c 'flake8 \"$0\" || ./.venv/bin/flake8 \"$0\"'"
     ],
     "*.md": [
       "markdownlint-cli2"
