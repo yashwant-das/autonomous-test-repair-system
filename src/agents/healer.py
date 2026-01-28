@@ -4,10 +4,13 @@ Refactored for Phase 1: Explainable Healing.
 """
 
 import json
+import logging
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 from src.models.healing_model import (
     Evidence,
@@ -30,7 +33,7 @@ ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
 
 def run_test(test_file):
     """Run a Playwright test file and return execution result."""
-    print(f"Running {test_file}...")
+    logger.info(f"Running {test_file}...")
     try:
         result = subprocess.run(
             ["npx", "playwright", "test", str(test_file)],
@@ -225,7 +228,7 @@ ERROR LOGS:
         )
 
     except Exception as e:
-        print(f"LLM Analysis Error: {e}")
+        logger.error(f"LLM Analysis Error: {e}")
         return HealingDecision(
             test_file=test_file,
             failure_type=FailureType.UNKNOWN,
@@ -303,8 +306,8 @@ def apply_fix(file_path, current_code, decision: HealingDecision):
             )
             return "\n".join(new_code_lines)
 
-    print(
-        f"WARNING: Target code not found in file (even after normalization).\nTarget:\n{target}"
+    logger.warning(
+        f"Target code not found in file (even after normalization).\nTarget:\n{target}"
     )
     return current_code
 
@@ -330,7 +333,7 @@ def emit_artifacts(decision: HealingDecision, timeline: ExecutionTimeline):
     with open(timeline_path, "w") as f:
         f.write(timeline.to_json())
 
-    print(f"  -> Artifacts saved:\n     {decision_path}\n     {timeline_path}")
+    logger.info(f"Artifacts saved:\n     {decision_path}\n     {timeline_path}")
 
 
 def attempt_healing(test_file, max_retries=1):
@@ -345,12 +348,13 @@ def attempt_healing(test_file, max_retries=1):
         timeline.add_step("Error", msg)
         return msg
 
-    print(f"\n--- Starting Healing Session: {test_file} ---")
+    logger.info(f"--- Starting Healing Session: {test_file} ---")
 
     # 1. Initial Run
     result = run_test(validated_path)
     if result.returncode == 0:
         timeline.add_step("InitialRun", "Test passed, no healing needed")
+        logger.info("--- Healing Session Completed: Test passed initially ---")
         return "Test passed (No healing needed)."
 
     timeline.add_step(
@@ -364,7 +368,7 @@ def attempt_healing(test_file, max_retries=1):
 
     # 2. Loop
     for attempt in range(max_retries):
-        print(f"\nAttempt {attempt + 1}/{max_retries}")
+        logger.info(f"Healing Attempt {attempt + 1}/{max_retries}")
         timeline.add_step("HealingAttempt", f"Starting attempt {attempt + 1}")
 
         # Gather Evidence
@@ -375,8 +379,8 @@ def attempt_healing(test_file, max_retries=1):
 
         # Reason & Plan
         decision = analyze_and_plan(validated_path, current_code, evidence)
-        print(f"  diagnosis: {decision.failure_type}")
-        print(f"  hypothesis: {decision.hypothesis}")
+        logger.info(f"Diagnosis: {decision.failure_type}")
+        logger.info(f"Hypothesis: {decision.hypothesis}")
 
         timeline.add_step(
             "AnalysisComplete",
@@ -421,6 +425,9 @@ def attempt_healing(test_file, max_retries=1):
         emit_artifacts(decision, timeline)
 
         if decision.verification_passed:
+            logger.info(
+                f"--- Healing Session Completed: SUCCESS! \nReasoning: {decision.hypothesis} ---"
+            )
             return f"\nSUCCESS: Test healed! \nReasoning: {decision.hypothesis}"
 
         # Prepare for next loop
@@ -430,6 +437,9 @@ def attempt_healing(test_file, max_retries=1):
 
     timeline.add_step(
         "HealingFailed", f"Exhausted {max_retries} attempts without success"
+    )
+    logger.info(
+        f"--- Healing Session Completed: Failed to heal after {max_retries} attempts ---"
     )
     return "Healing failed to make test pass."
 

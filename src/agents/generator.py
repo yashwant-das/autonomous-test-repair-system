@@ -5,6 +5,7 @@ This module generates TypeScript Playwright tests from URLs and feature descript
 using LLM-based code generation.
 """
 
+import logging
 import os
 import subprocess
 import sys
@@ -12,6 +13,8 @@ import sys
 from src.utils.browser import extract_domain, fetch_page_context
 from src.utils.llm import extract_code_block, get_client, get_model
 from src.utils.prompt_loader import load_prompt
+
+logger = logging.getLogger(__name__)
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -31,6 +34,7 @@ def generate_test_script(url, feature_description):
         str: Generated TypeScript test code, or error message if generation fails
     """
     try:
+        logger.info(f"Generating test for URL: {url}")
         # 1. Fetch page context (HTML)
         html_context = fetch_page_context(url)
 
@@ -114,7 +118,7 @@ def run_generated_test(url, code_snippet, description="test"):
         with open(filepath, "w", encoding="utf-8") as f:
             f.write(code_snippet)
 
-        print(f"Running {filename}...")
+        logger.info(f"Running {filename}...")
 
         # Subprocess run uses a list, so shell quoting is handled automatically.
 

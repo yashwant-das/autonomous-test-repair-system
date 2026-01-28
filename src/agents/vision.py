@@ -6,6 +6,7 @@ Playwright test scripts based on visual analysis.
 """
 
 import base64
+import logging
 import os
 import sys
 import time
@@ -16,6 +17,8 @@ from playwright.sync_api import sync_playwright
 from src.utils.browser import extract_domain
 from src.utils.llm import extract_code_block, get_client, get_model
 from src.utils.prompt_loader import load_prompt
+
+logger = logging.getLogger(__name__)
 
 # Add the project root to sys.path to support 'src.' imports when run as a script
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
@@ -78,6 +81,7 @@ def analyze_visual_ui(url, instruction):
             os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
         # 1. Capture screenshot of the target URL
+        logger.info(f"Capturing screenshot for {url}...")
         try:
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
@@ -103,6 +107,7 @@ def analyze_visual_ui(url, instruction):
         system_instruction = load_prompt("vision")
 
         # 4. Call Vision LLM
+        logger.info("Analyzing UI with Vision model...")
         client = get_client()
         try:
             response = client.chat.completions.create(
