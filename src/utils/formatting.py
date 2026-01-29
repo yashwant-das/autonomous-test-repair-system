@@ -33,17 +33,17 @@ def format_test_result(filepath: str, output: str, success: bool) -> str:
         str: Formatted user-friendly message
     """
     cleaned_output = clean_ansi_codes(output)
-    
+
     # Remove some common noisy lines if present
     cleaned_output = cleaned_output.replace("To open last HTML report run:", "")
     cleaned_output = cleaned_output.replace("npx playwright show-report", "")
-    
+
     # Trim excessive whitespace
     cleaned_output = cleaned_output.strip()
 
     status = "PASSED" if success else "FAILED"
     icon = "✅" if success else "❌"
-    
+
     return f"""{icon} TEST {status}
 Stored in: {filepath}
 

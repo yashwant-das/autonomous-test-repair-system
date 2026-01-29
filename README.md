@@ -106,14 +106,26 @@ The easiest way to run the application is using Docker.
 
 ```bash
 # Build the Docker image
-docker build -t qa-agent .
+docker build -t autonomoustestrepairsystem .
 
 # Run the container
 docker run -p 7860:7860 \
+  --name autonomoustestrepairsystem \
   --add-host=host.docker.internal:host-gateway \
   -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
   -e LLM_PROVIDER="lm_studio" \
-  qa-agent
+  autonomoustestrepairsystem
+```
+
+**Or with Ollama:**
+
+```bash
+docker run -p 7860:7860 \
+  --name autonomoustestrepairsystem \
+  --add-host=host.docker.internal:host-gateway \
+  -e OLLAMA_URL="http://host.docker.internal:11434/v1" \
+  -e LLM_PROVIDER="ollama" \
+  autonomoustestrepairsystem
 ```
 
 Access the Gradio interface at `http://localhost:7860`. See [DOCKER.md](DOCKER.md) for more info.

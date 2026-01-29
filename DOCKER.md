@@ -5,7 +5,7 @@ This guide covers building and running the Autonomous Test Repair System in Dock
 ## Prerequisites
 
 - Docker installed and running
-- LM Studio running (Server ON, Port 1234)
+- **Either** LM Studio (Server ON, Port 1234) **OR** Ollama (Server ON, Port 11434) running
 - A broken test file in `tests/generated/` (e.g., `broken_example.spec.ts`)
 
 ## Building the Docker Image
@@ -13,10 +13,10 @@ This guide covers building and running the Autonomous Test Repair System in Dock
 Build the Docker image with the following command:
 
 ```bash
-docker build -t qa-agent .
+docker build -t autonomoustestrepairsystem .
 ```
 
-This creates a Docker image named `qa-agent` using the `Dockerfile` in the project root.
+This creates a Docker image named `autonomoustestrepairsystem` using the `Dockerfile` in the project root.
 
 ## Running the Container
 
@@ -26,10 +26,11 @@ Run the container with port mapping to access the Gradio UI:
 
 ```bash
 docker run -p 7860:7860 \
+  --name autonomoustestrepairsystem \
   --add-host=host.docker.internal:host-gateway \
   -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
   -e PYTHONUNBUFFERED=1 \
-  qa-agent
+  autonomoustestrepairsystem
 ```
 
 Access the Gradio interface at `http://localhost:7860`.
@@ -43,11 +44,12 @@ If you have a `.env` file, mount it:
 
 ```bash
 docker run -p 7860:7860 \
+  --name autonomoustestrepairsystem \
   --add-host=host.docker.internal:host-gateway \
   --env-file .env \
   -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
   -e PYTHONUNBUFFERED=1 \
-  qa-agent
+  autonomoustestrepairsystem
 ```
 
 ### With Volume Mount (For Development)
@@ -56,12 +58,27 @@ Mount the `tests/generated` directory to edit files on your host and see changes
 
 ```bash
 docker run -p 7860:7860 \
+  --name autonomoustestrepairsystem \
   --add-host=host.docker.internal:host-gateway \
   --env-file .env \
   -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
   -e PYTHONUNBUFFERED=1 \
   -v "$(pwd)/tests/generated:/app/tests/generated" \
-  qa-agent
+  autonomoustestrepairsystem
+```
+
+### Run with Ollama
+
+Run the container using Ollama as the provider (Ollama must be running on your host at port 11434):
+
+```bash
+docker run -p 7860:7860 \
+  --name autonomoustestrepairsystem \
+  --add-host=host.docker.internal:host-gateway \
+  -e LLM_PROVIDER="ollama" \
+  -e OLLAMA_URL="http://host.docker.internal:11434/v1" \
+  -e PYTHONUNBUFFERED=1 \
+  autonomoustestrepairsystem
 ```
 
 ## Manual Debugging & Healing Workflow
@@ -74,13 +91,13 @@ Run the Docker container with a volume mount to enable file editing from your ho
 
 ```bash
 docker run -d -p 7860:7860 \
+  --name autonomoustestrepairsystem \
   --add-host=host.docker.internal:host-gateway \
   --env-file .env \
   -e LM_STUDIO_URL="http://host.docker.internal:1234/v1" \
   -e PYTHONUNBUFFERED=1 \
   -v "$(pwd)/tests/generated:/app/tests/generated" \
-  --name qa-agent-container \
-  qa-agent
+  autonomoustestrepairsystem
 ```
 
 The `-d` flag runs the container in detached mode, and `--name` assigns a name for easier reference.
@@ -98,7 +115,7 @@ Get a command-line interface inside the container:
 2. **Open the Shell:**
 
    ```bash
-   docker exec -it qa-agent-container /bin/bash
+   docker exec -it autonomoustestrepairsystem /bin/bash
    ```
 
    Or use the container ID:
@@ -139,7 +156,7 @@ Copy the Playwright HTML report from the container to your host machine:
 
 ```bash
 # Syntax: docker cp <ContainerName>:<PathInside> <PathOnHost>
-docker cp qa-agent-container:/app/playwright-report ./playwright-report
+docker cp autonomoustestrepairsystem:/app/playwright-report ./playwright-report
 ```
 
 **View the Report:**
@@ -172,31 +189,31 @@ python -m src.agents.healer tests/generated/broken_example.spec.ts
 ### Stop the Container
 
 ```bash
-docker stop qa-agent-container
+docker stop autonomoustestrepairsystem
 ```
 
 ### Start a Stopped Container
 
 ```bash
-docker start qa-agent-container
+docker start autonomoustestrepairsystem
 ```
 
 ### Remove the Container
 
 ```bash
-docker rm qa-agent-container
+docker rm autonomoustestrepairsystem
 ```
 
 ### View Container Logs
 
 ```bash
-docker logs qa-agent-container
+docker logs autonomoustestrepairsystem
 ```
 
 ### Follow Logs in Real-Time
 
 ```bash
-docker logs -f qa-agent-container
+docker logs -f autonomoustestrepairsystem
 ```
 
 ## Troubleshooting
@@ -218,7 +235,7 @@ If you encounter permission errors with mounted volumes, adjust file permissions
 Check logs for errors:
 
 ```bash
-docker logs qa-agent-container
+docker logs autonomoustestrepairsystem
 ```
 
 ### Port Already in Use
@@ -236,8 +253,8 @@ Key environment variables for Docker:
 - `LLM_PROVIDER`: Service provider (`lm_studio` or `ollama`)
 - `LM_STUDIO_URL`: LM Studio API endpoint (default: `http://localhost:1234/v1`)
 - `OLLAMA_URL`: Ollama API endpoint (default: `http://localhost:11434/v1`)
-- `LM_STUDIO_MODEL` / `OLLAMA_MODEL`: Text generation model name
-- `LM_STUDIO_VISION_MODEL` / `OLLAMA_VISION_MODEL`: Vision description model name
+- `LM_STUDIO_MODEL` / `OLLAMA_MODEL`: Text generation model name (defaults: `qwen/qwen3-coder-30b` / `qwen3-coder:latest`)
+- `LM_STUDIO_VISION_MODEL` / `OLLAMA_VISION_MODEL`: Vision description model name (defaults: `qwen/qwen3-vl-30b` / `qwen3-vl:30b`)
 - `GRADIO_SERVER_NAME`: Set to `0.0.0.0` in Dockerfile for container access
 - `PYTHONUNBUFFERED`: Set to `1` for real-time log output
 

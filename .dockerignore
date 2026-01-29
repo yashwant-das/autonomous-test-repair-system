@@ -1,46 +1,21 @@
-# Python
-venv/
-.venv/
-env/
+# Dependencies
+node_modules/
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 .Python
-.pytest_cache/
-.coverage
-htmlcov/
-.mypy_cache/
+pip-log.txt
+pip-delete-this-directory.txt
 
-# Node.js
-node_modules/
-dist/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Git
-.git/
-.gitignore
-.gitattributes
-.husky/
-
-# Config and logs
+# Virtual environments
 .env
-.env.local
-*.log
-test-results/
-playwright-report/
-blob-report/
-*.pid
-*.seed
-*.pid.lock
-
-# Generated files
-tests/generated/*
-!tests/generated/.gitkeep
-tests/screenshots/*
-tests/artifacts/*
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # IDE
 .vscode/
@@ -48,13 +23,32 @@ tests/artifacts/*
 *.swp
 *.swo
 *~
-.DS_Store
 
-# Documentation
-*.md
-!README.md
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+test-results/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Git
+.git/
+.gitignore
 
 # Docker
 Dockerfile*
 .dockerignore
 docker-compose*.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/

@@ -13,7 +13,7 @@
    python scripts/setup_demo.py
    ```
 
-   *This creates `tests/generated/demo_broken.spec.ts` with an intentional locator bug.*
+   _This creates `tests/generated/demo_broken.spec.ts` with an intentional locator bug._
 
 ---
 
@@ -31,7 +31,7 @@
 
 ### 3. The Core Value: "Explainable AI" (1:30 - 2:30)
 
-- **Talk track**: "Look at the **Execution Timeline**. The agent didn't just 'guess.' It identified a `TIMEOUT` with **100% confidence** using regex. Then, it consulted the LLM to 'reason' a fix. See the **Decision JSON**? It explains exactly *why* it chose the new selector."
+- **Talk track**: "Look at the **Execution Timeline**. The agent didn't just 'guess.' It identified a `TIMEOUT` with **100% confidence** using regex. Then, it consulted the LLM to 'reason' a fix. See the **Decision JSON**? It explains exactly _why_ it chose the new selector."
 - **Visual**: Scroll through the **Timeline** and expand the **Decision Inspector**.
 
 ### 4. The Closing: "Professional Toolchain" (2:30 - 3:00)

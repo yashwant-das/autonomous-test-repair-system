@@ -2,9 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "commonjs",
-    "lib": [
-      "ES2020"
-    ],
+    "lib": ["ES2020"],
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -14,13 +12,6 @@
     "outDir": "./dist",
     "rootDir": "."
   },
-  "include": [
-    "tests/**/*",
-    "playwright.config.ts",
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["tests/**/*", "playwright.config.ts", "src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }
