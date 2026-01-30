@@ -2,9 +2,13 @@
 
 > **An Intelligent, Self-Healing, and Explainable Automated QA System**
 
-[![Status](https://img.shields.io/badge/Status-Beta-orange)](https://github.com/yashwant-das/autonomous-test-repair-system)
-[![Python](https://img.shields.io/badge/Python-3.12-blue)](https://www.python.org/)
-[![Playwright](https://img.shields.io/badge/Playwright-Latest-green)](https://playwright.dev/)
+[![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9%2B-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Playwright](https://img.shields.io/badge/Playwright-1.57%2B-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Gradio](https://img.shields.io/badge/Gradio-6.2%2B-FF6B6B?logo=gradio&logoColor=white)](https://gradio.app/)
+[![ESLint](https://img.shields.io/badge/ESLint-9.39%2B-4B32C3?logo=eslint&logoColor=white)](https://eslint.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](DOCKER.md)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ## Problem Statement
 

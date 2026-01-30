@@ -38,7 +38,7 @@
     "ai"
   ],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
