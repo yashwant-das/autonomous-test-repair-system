@@ -164,6 +164,11 @@ python src/app.py
 
 Go to `http://127.0.0.1:7860` to generate, run, and heal tests.
 
+<img width="2022" height="1324" alt="Screenshot 2026-01-30 at 10 40 13 PM" src="https://github.com/user-attachments/assets/71abaf56-78ae-44f6-bce1-f5d9413a48b4" />
+<img width="2022" height="1324" alt="Screenshot 2026-01-30 at 10 40 38 PM" src="https://github.com/user-attachments/assets/c9a93fd7-c931-4738-a416-4568a6936932" />
+<img width="2022" height="1324" alt="Screenshot 2026-01-30 at 10 42 47 PM" src="https://github.com/user-attachments/assets/d4ba59bb-1fed-41a2-9758-0765800f1aa4" />
+
+
 ### Running Agents Individually
 
 ```bash
